@@ -1,10 +1,16 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
+import SEO from '../components/SEO';
 
 export default function Contact() {
   return (
     <div className="pt-32 pb-20 px-6">
+      <SEO 
+        title="Contact" 
+        description="Neem contact op met WebDiscovery voor uw nieuwe website of rebranding. Wij staan klaar om uw bedrijf online te laten groeien."
+        canonical="/contact"
+      />
       <div className="max-w-7xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

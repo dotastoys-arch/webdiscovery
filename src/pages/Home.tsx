@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 import { 
   ArrowRight, 
   CheckCircle2, 
@@ -11,8 +12,34 @@ import {
   Star
 } from 'lucide-react';
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Webdesign & Rebranding Pakket",
+  "provider": {
+    "@type": "Organization",
+    "name": "WebDiscovery",
+    "url": "https://webdiscovery.nl"
+  },
+  "description": "Complete online transformatie voor ondernemers. Inclusief maatwerk webdesign, rebranding, hosting en domeinnaam.",
+  "offers": {
+    "@type": "Offer",
+    "price": "499.00",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock"
+  }
+};
+
 const Hero = () => (
   <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20 overflow-hidden">
+    <SEO 
+      title="Home" 
+      description="WebDiscovery bouwt high-end websites die converteren. Van een verouderde look naar een complete rebranding voor een vast bedrag van €499."
+      canonical="/"
+    />
+    <script type="application/ld+json">
+      {JSON.stringify(structuredData)}
+    </script>
     <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-accent/5 rounded-full blur-3xl -z-10 animate-pulse" />
     <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-accent/5 rounded-full blur-3xl -z-10 animate-pulse delay-1000" />
     

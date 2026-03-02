@@ -1,9 +1,15 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import SEO from '../components/SEO';
 
 export default function Privacy() {
   return (
     <div className="pt-32 pb-20 px-6">
+      <SEO 
+        title="Privacy Beleid" 
+        description="Privacy beleid van WebDiscovery. Wij gaan zorgvuldig om met uw persoonsgegevens."
+        canonical="/privacy-beleid"
+      />
       <div className="max-w-4xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

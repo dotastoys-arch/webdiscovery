@@ -1,9 +1,15 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import SEO from '../components/SEO';
 
 export default function Terms() {
   return (
     <div className="pt-32 pb-20 px-6">
+      <SEO 
+        title="Algemene Voorwaarden" 
+        description="Lees de algemene voorwaarden van WebDiscovery. Duidelijke afspraken over ons webdesign en rebranding pakket."
+        canonical="/algemene-voorwaarden"
+      />
       <div className="max-w-4xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
