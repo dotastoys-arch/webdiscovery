@@ -1,10 +1,7 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export const Navbar = () => {
-  const location = useLocation();
-  const isHome = location.pathname === '/';
-
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center glass rounded-full px-6 py-3">
@@ -15,14 +12,8 @@ export const Navbar = () => {
           <span className="font-bold text-xl tracking-tight text-brand-text">WebDiscovery</span>
         </Link>
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-brand-muted">
-          {isHome ? (
-            <>
-              <a href="#aanpak" className="hover:text-brand-text transition-colors">Onze Aanpak</a>
-              <a href="#tarief" className="hover:text-brand-text transition-colors">Tarief</a>
-            </>
-          ) : (
-            <Link to="/" className="hover:text-brand-text transition-colors">Home</Link>
-          )}
+          <Link to="/#aanpak" className="hover:text-brand-text transition-colors">Onze Aanpak</Link>
+          <Link to="/#tarief" className="hover:text-brand-text transition-colors">Tarief</Link>
           <Link to="/contact" className="hover:text-brand-text transition-colors">Contact</Link>
         </div>
         <Link to="/contact" className="bg-brand-text text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-brand-text/90 transition-all shadow-sm">
@@ -47,7 +38,6 @@ export const Footer = () => (
         <Link to="/algemene-voorwaarden" className="hover:text-brand-text transition-colors">Algemene Voorwaarden</Link>
         <Link to="/privacy-beleid" className="hover:text-brand-text transition-colors">Privacy Beleid</Link>
         <Link to="/contact" className="hover:text-brand-text transition-colors">Contact</Link>
-        <a href="mailto:info@webdiscovery.nl" className="hover:text-brand-text transition-colors">info@webdiscovery.nl</a>
       </div>
       
       <p className="text-sm text-brand-muted/60">
