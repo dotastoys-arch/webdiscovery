@@ -180,7 +180,7 @@ const Features = () => {
 const Pricing = () => (
   <section id="tarief" className="py-32 px-6 relative overflow-hidden">
     <div className="max-w-3xl mx-auto text-center">
-      <h2 className="text-4xl md:text-6xl font-bold mb-8">Eén vast bedrag. <br /><span className="text-brand-muted/40">Geen verrassingen.</span></h2>
+      <h2 className="text-4xl md:text-6xl font-bold mb-8">Eén vast bedrag. <br /><span className="text-brand-muted/60">Geen verrassingen.</span></h2>
       
       <div className="mt-16 p-12 glass rounded-[40px] relative">
         <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-brand-text text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest shadow-lg">

@@ -7,12 +7,12 @@
   --color-brand-bg: #FDFBF7;
   --color-brand-text: #1A1A1A;
   --color-brand-accent: #8B7E74;
-  --color-brand-muted: #6B7280;
+  --color-brand-muted: #374151;
 }
 
 @layer base {
   body {
-    @apply bg-brand-bg text-brand-text font-sans antialiased;
+    @apply bg-brand-bg text-brand-text font-sans antialiased font-[450];
   }
 }
 

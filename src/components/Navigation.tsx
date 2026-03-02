@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
 export const Navbar = () => {
   return (
@@ -11,12 +12,12 @@ export const Navbar = () => {
           </div>
           <span className="font-bold text-xl tracking-tight text-brand-text">WebDiscovery</span>
         </Link>
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-brand-muted">
-          <Link to="/#aanpak" className="hover:text-brand-text transition-colors">Onze Aanpak</Link>
-          <Link to="/#tarief" className="hover:text-brand-text transition-colors">Tarief</Link>
+        <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-brand-muted">
+          <HashLink smooth to="/#aanpak" className="hover:text-brand-text transition-colors">Onze Aanpak</HashLink>
+          <HashLink smooth to="/#tarief" className="hover:text-brand-text transition-colors">Tarief</HashLink>
           <Link to="/contact" className="hover:text-brand-text transition-colors">Contact</Link>
         </div>
-        <Link to="/contact" className="bg-brand-text text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-brand-text/90 transition-all shadow-sm">
+        <Link to="/contact" className="bg-brand-text text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-brand-text/90 transition-all shadow-md hover:shadow-lg">
           Start Project
         </Link>
       </div>
@@ -35,12 +36,12 @@ export const Footer = () => (
       </Link>
       
       <div className="flex flex-col items-center md:items-end gap-2">
-        <div className="flex flex-wrap justify-center md:justify-end gap-6 text-xs text-brand-muted mb-2">
+        <div className="flex flex-wrap justify-center md:justify-end gap-6 text-xs font-semibold text-brand-muted mb-2">
           <Link to="/algemene-voorwaarden" className="hover:text-brand-text transition-colors">Algemene Voorwaarden</Link>
           <Link to="/privacy-beleid" className="hover:text-brand-text transition-colors">Privacy Beleid</Link>
           <Link to="/contact" className="hover:text-brand-text transition-colors">Contact</Link>
         </div>
-        <div className="text-[10px] text-brand-muted/60 text-center md:text-right space-y-1">
+        <div className="text-[10px] font-medium text-brand-muted/70 text-center md:text-right space-y-1">
           <p>© {new Date().getFullYear()} WebDiscovery.nl — Alle rechten voorbehouden.</p>
         </div>
       </div>
