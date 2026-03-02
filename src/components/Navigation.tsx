@@ -89,6 +89,15 @@ export const Navbar = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-white z-40 md:hidden flex flex-col items-center justify-center p-6"
           >
+            {/* Close button inside overlay */}
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="absolute top-8 right-8 p-2 text-brand-text"
+              aria-label="Sluit menu"
+            >
+              <X size={32} />
+            </button>
+
             <div className="flex flex-col items-center gap-8 text-center">
               {navLinks.map((link, i) => (
                 <motion.div
