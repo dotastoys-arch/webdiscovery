@@ -10,6 +10,7 @@ import { Navbar, Footer } from './components/Navigation';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Contact from './pages/Contact';
+import Portfolio from './pages/Portfolio';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 
@@ -23,6 +24,7 @@ export default function App() {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/portfolio" element={<Portfolio />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/algemene-voorwaarden" element={<Terms />} />
               <Route path="/privacy-beleid" element={<Privacy />} />

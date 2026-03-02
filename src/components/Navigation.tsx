@@ -15,6 +15,7 @@ export const Navbar = () => {
         <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-brand-muted">
           <HashLink smooth to="/#aanpak" className="hover:text-brand-text transition-colors">Onze Aanpak</HashLink>
           <HashLink smooth to="/#tarief" className="hover:text-brand-text transition-colors">Tarief</HashLink>
+          <Link to="/portfolio" className="hover:text-brand-text transition-colors">Portfolio</Link>
           <Link to="/contact" className="hover:text-brand-text transition-colors">Contact</Link>
         </div>
         <Link to="/contact" className="bg-brand-text text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-brand-text/90 transition-all shadow-md hover:shadow-lg">
@@ -37,6 +38,7 @@ export const Footer = () => (
       
       <div className="flex flex-col items-center md:items-end gap-2">
         <div className="flex flex-wrap justify-center md:justify-end gap-6 text-xs font-semibold text-brand-muted mb-2">
+          <Link to="/portfolio" className="hover:text-brand-text transition-colors">Portfolio</Link>
           <Link to="/algemene-voorwaarden" className="hover:text-brand-text transition-colors">Algemene Voorwaarden</Link>
           <Link to="/privacy-beleid" className="hover:text-brand-text transition-colors">Privacy Beleid</Link>
           <Link to="/contact" className="hover:text-brand-text transition-colors">Contact</Link>

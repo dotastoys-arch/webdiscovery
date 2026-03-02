@@ -49,14 +49,14 @@ const Hero = () => (
       transition={{ duration: 0.8 }}
       className="text-center max-w-4xl"
     >
-      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-black/5 text-xs font-medium text-brand-muted mb-8 shadow-sm">
-        <span className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
+      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-black/5 text-xs font-medium text-brand-muted mb-8 mt-24 shadow-sm">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
         Beschikbaar voor nieuwe transformaties
       </div>
       
-      <h1 className="text-5xl md:text-8xl font-serif italic mb-8 leading-[1.1] text-gradient">
+      <h1 className="text-5xl md:text-8xl font-serif italic mb-8 leading-[1.3] text-brand-text overflow-visible py-4">
         Geef je bedrijf de <br />
-        <span className="not-italic font-sans font-bold">Digitale Upgrade</span>
+        <span className="not-italic font-sans font-extrabold block mt-2">Digitale Upgrade</span>
       </h1>
       
       <p className="text-lg md:text-xl text-brand-muted mb-12 max-w-2xl mx-auto leading-relaxed">
