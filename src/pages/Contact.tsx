@@ -85,18 +85,18 @@ export default function Contact() {
               <div>
                 <h4 className="font-bold text-xl mb-1 text-brand-text">E-mail ons</h4>
                 <p className="text-brand-muted mb-2">Voor algemene vragen en offertes.</p>
-                <a href="mailto:info@webdiscovery.nl" className="text-brand-text font-medium hover:underline">info@webdiscovery.nl</a>
+                <a href="mailto:administratie@webdiscovery.nl" className="text-brand-text font-medium hover:underline">administratie@webdiscovery.nl</a>
               </div>
             </div>
 
             <div className="glass p-8 rounded-3xl flex items-start gap-6">
               <div className="w-12 h-12 rounded-2xl bg-brand-text text-white flex items-center justify-center shrink-0">
-                <MessageSquare className="w-6 h-6" />
+                <Phone className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="font-bold text-xl mb-1 text-brand-text">WhatsApp</h4>
-                <p className="text-brand-muted mb-2">Snel antwoord op je vragen.</p>
-                <a href="#" className="text-brand-text font-medium hover:underline">+31 (0)6 12345678</a>
+                <h4 className="font-bold text-xl mb-1 text-brand-text">Telefoon</h4>
+                <p className="text-brand-muted mb-2">Maandag t/m vrijdag, 09:00 - 17:00.</p>
+                <a href="tel:+31852129077" className="text-brand-text font-medium hover:underline">+31 85 212 90 77</a>
               </div>
             </div>
 
@@ -106,7 +106,21 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-bold text-xl mb-1 text-brand-text">Locatie</h4>
-                <p className="text-brand-muted">Nederland — We werken volledig op afstand voor klanten door het hele land.</p>
+                <p className="text-brand-muted mb-1">Pijlspitskreek 3, 2241 MT Wassenaar</p>
+                <p className="text-brand-muted text-sm italic">(Geen bezoekadres)</p>
+              </div>
+            </div>
+
+            <div className="glass p-8 rounded-3xl">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="text-brand-muted font-medium uppercase tracking-wider text-[10px]">KVK Nummer</p>
+                  <p className="text-brand-text font-bold">96004177</p>
+                </div>
+                <div>
+                  <p className="text-brand-muted font-medium uppercase tracking-wider text-[10px]">BTW Nummer</p>
+                  <p className="text-brand-text font-bold">NL005189518B08</p>
+                </div>
               </div>
             </div>
           </motion.div>

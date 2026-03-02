@@ -34,15 +34,16 @@ export const Footer = () => (
         <span className="font-bold text-xl tracking-tight text-brand-text">WebDiscovery</span>
       </Link>
       
-      <div className="flex flex-wrap justify-center gap-8 text-sm text-brand-muted">
-        <Link to="/algemene-voorwaarden" className="hover:text-brand-text transition-colors">Algemene Voorwaarden</Link>
-        <Link to="/privacy-beleid" className="hover:text-brand-text transition-colors">Privacy Beleid</Link>
-        <Link to="/contact" className="hover:text-brand-text transition-colors">Contact</Link>
+      <div className="flex flex-col items-center md:items-end gap-2">
+        <div className="flex flex-wrap justify-center md:justify-end gap-6 text-xs text-brand-muted mb-2">
+          <Link to="/algemene-voorwaarden" className="hover:text-brand-text transition-colors">Algemene Voorwaarden</Link>
+          <Link to="/privacy-beleid" className="hover:text-brand-text transition-colors">Privacy Beleid</Link>
+          <Link to="/contact" className="hover:text-brand-text transition-colors">Contact</Link>
+        </div>
+        <div className="text-[10px] text-brand-muted/60 text-center md:text-right space-y-1">
+          <p>© {new Date().getFullYear()} WebDiscovery.nl — Alle rechten voorbehouden.</p>
+        </div>
       </div>
-      
-      <p className="text-sm text-brand-muted/60">
-        © {new Date().getFullYear()} WebDiscovery.nl — Alle rechten voorbehouden.
-      </p>
     </div>
   </footer>
 );
