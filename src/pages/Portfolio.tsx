@@ -5,6 +5,13 @@ import { ArrowRight, ExternalLink } from 'lucide-react';
 
 const projects = [
   {
+    title: "Legend Chinees Thais Indisch Restaurant",
+    category: "Horeca Website",
+    description: "Een sfeervolle en moderne website voor een veelzijdig Aziatisch restaurant, inclusief online reserveringsmogelijkheden en een overzichtelijk menu.",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200",
+    link: "https://legend.webdiscovery.nl"
+  },
+  {
     title: "EcoStyle Interiors",
     category: "E-commerce & Branding",
     description: "Een complete digitale transformatie voor een duurzaam interieurmerk. Van logo tot een conversie-gerichte webshop.",
@@ -94,9 +101,11 @@ const Portfolio = () => {
                   </p>
                   <a 
                     href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm font-bold text-brand-text hover:gap-4 transition-all"
                   >
-                    Bekijk Case Study <ArrowRight className="w-4 h-4" />
+                    Bekijk Website <ArrowRight className="w-4 h-4" />
                   </a>
                 </div>
               </div>
