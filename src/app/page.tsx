@@ -150,6 +150,65 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ───────── Ons werk ───────── */}
+      <section id="portfolio" className="hair-t bg-[var(--paper-2)]">
+        <div className="mx-auto max-w-[1200px] px-6 py-24">
+          <div className="flex items-baseline justify-between mb-12">
+            <h2 className="font-display text-4xl md:text-5xl tracking-[-0.02em]">Ons werk</h2>
+            <span className="text-[13px] uppercase tracking-[0.2em] text-[var(--ink-soft)]">Live projecten</span>
+          </div>
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+            {/* Browser-mockup van sokvanneocat.nl in hun eigen kleuren */}
+            <a
+              href="https://sokvanneocat.nl"
+              target="_blank"
+              rel="noreferrer"
+              className="group block rounded-2xl border border-[var(--hair)] bg-white shadow-xl overflow-hidden hover:-translate-y-1 transition-transform"
+            >
+              <div className="flex items-center gap-1.5 px-4 h-9 border-b border-neutral-200 bg-neutral-50">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                <span className="ml-3 text-[11px] text-neutral-400">sokvanneocat.nl</span>
+              </div>
+              <div className="p-8" style={{ background: 'linear-gradient(135deg,#16294d,#0f1d38)' }}>
+                <div className="text-[10px] uppercase tracking-[0.2em]" style={{ color: '#c9a25a' }}>
+                  Rasclub · opgericht 1980
+                </div>
+                <div className="mt-3 text-white text-2xl leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                  Rasclub voor Siamezen &amp; Oosterse Korthaar
+                </div>
+                <div className="mt-6 inline-block text-xs font-semibold px-4 py-2 rounded" style={{ background: '#c9a25a', color: '#16294d' }}>
+                  Word lid
+                </div>
+              </div>
+            </a>
+            {/* Beschrijving */}
+            <div>
+              <h3 className="font-display text-3xl mb-3">SOK van Neocat</h3>
+              <p className="text-[var(--ink)]/70 leading-relaxed mb-5">
+                Een moderne website voor een landelijke rasvereniging voor Siamese en Oosterse
+                Korthaar katten. Met ledeninformatie, een kennisbank, evenementen en online
+                aanmelden — verzorgd, snel en makkelijk zelf te beheren.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {['Webdesign', 'CMS', 'Ledenportaal', 'Evenementen'].map((t) => (
+                  <span key={t} className="text-xs rounded-full border border-[var(--hair)] px-3 py-1 text-[var(--ink)]/70">{t}</span>
+                ))}
+              </div>
+              <a
+                href="https://sokvanneocat.nl"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline"
+              >
+                Bekijk de live site →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ───────── AI pull-quote ───────── */}
       <section className="mx-auto max-w-[1200px] px-6 py-28">
         <div className="grid md:grid-cols-12 gap-8">
@@ -206,6 +265,32 @@ export default function Home() {
             >
               Vraag een gratis ontwerp aan →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── Geen verrassingen ───────── */}
+      <section className="mx-auto max-w-[1200px] px-6 py-20">
+        <div className="rounded-2xl border border-[var(--hair)] bg-[var(--paper-2)] px-8 py-12">
+          <div className="text-center max-w-xl mx-auto mb-10">
+            <h2 className="font-display text-3xl md:text-4xl tracking-[-0.02em]">
+              Alles inbegrepen. <span className="italic text-[var(--accent)]">Geen verrassingen.</span>
+            </h2>
+            <p className="mt-3 text-[var(--ink)]/70">Wat je ziet, is wat je krijgt — één heldere prijs, verder niets.</p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { t: 'Geen addertjes', d: 'Geen kleine lettertjes of verborgen voorwaarden.' },
+              { t: 'Geen add-ons', d: 'Geen losse modules die je alsnog moet bijkopen.' },
+              { t: 'Geen plugins', d: 'Geen extra software om zelf te installeren of bij te houden.' },
+              { t: 'Geen extra kosten', d: 'Geen verrassingen op de rekening — vooraf duidelijk.' },
+            ].map((x) => (
+              <div key={x.t} className="text-center">
+                <div className="mx-auto w-10 h-10 rounded-full border border-[var(--accent)] flex items-center justify-center text-[var(--accent)] mb-3 text-lg">✕</div>
+                <div className="font-semibold">{x.t}</div>
+                <p className="text-sm text-[var(--ink)]/60 mt-1">{x.d}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
