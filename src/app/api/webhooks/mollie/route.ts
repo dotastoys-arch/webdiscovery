@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSql, hasDb } from '@/lib/db';
 import { mollie, hasMollie } from '@/lib/mollie';
+import { markOrderPaid } from '@/lib/orders';
 
 // Mollie POST't hierheen met een payment id. We verifiëren de status bij Mollie
 // (niet blind vertrouwen) en werken de bestelling bij.
@@ -17,15 +18,13 @@ export async function POST(req: NextRequest) {
     const sql = getSql();
 
     if (payment.status === 'paid') {
-      const rows = await sql`
-        update orders set status = 'paid', paid_at = now(), updated_at = now()
-        where (id = ${orderId ?? null} or mollie_payment_id = ${paymentId}) and status <> 'delivered'
-        returning lead_id`;
-      const leadId = rows[0]?.lead_id;
-      if (leadId) {
-        await sql`update leads set status = 'won', updated_at = now() where id = ${leadId}`;
-        await sql`insert into events (lead_id, type, data) values (${leadId}, 'order_paid', ${JSON.stringify({ paymentId })}::jsonb)`;
+      // Order-id uit metadata, of val terug op de payment-id.
+      let id = orderId;
+      if (!id) {
+        const found = await sql`select id from orders where mollie_payment_id = ${paymentId} limit 1`;
+        id = found[0]?.id as string | undefined;
       }
+      if (id) await markOrderPaid(id, paymentId);
     } else if (['expired', 'failed', 'canceled'].includes(payment.status)) {
       await sql`update orders set status = 'pending', updated_at = now()
                 where mollie_payment_id = ${paymentId} and status = 'awaiting_payment'`;
