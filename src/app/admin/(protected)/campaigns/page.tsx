@@ -1,6 +1,7 @@
 import { getSql } from '@/lib/db';
 import { PageHeader, Table, Th, Td, StatusBadge, EmptyState } from '../ui';
 import { formatDate } from '@/lib/config';
+import { OutreachButton } from './outreach-button';
 import type { Campaign, EmailTemplate } from '@/types/db';
 
 export const dynamic = 'force-dynamic';
@@ -15,6 +16,8 @@ export default async function CampaignsPage() {
   return (
     <div>
       <PageHeader title="Campagnes" subtitle="Outreach-campagnes en de mail-sjablonen per stap." />
+
+      <OutreachButton />
 
       <h2 className="text-sm font-medium text-neutral-500 mb-3">Campagnes</h2>
       {campaigns.length === 0 ? (

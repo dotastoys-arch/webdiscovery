@@ -3,6 +3,7 @@ import { getSql, hasDb } from '@/lib/db';
 import { siteContentSchema } from '@/lib/generate/schema';
 import type { ModuleId } from '@/lib/modules';
 import { PreviewSite } from './preview-site';
+import { ViewTracker } from './view-tracker';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,5 +26,10 @@ export default async function PreviewPage({ params }: { params: Promise<{ slug: 
   const parsed = siteContentSchema.safeParse(site.content);
   if (!parsed.success) notFound();
 
-  return <PreviewSite content={parsed.data} modules={(site.modules as ModuleId[]) ?? []} />;
+  return (
+    <>
+      <ViewTracker slug={slug} />
+      <PreviewSite content={parsed.data} modules={(site.modules as ModuleId[]) ?? []} />
+    </>
+  );
 }

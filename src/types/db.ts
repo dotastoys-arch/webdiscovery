@@ -120,6 +120,8 @@ export interface GeneratedSite {
   brief: string | null;
   content: Record<string, unknown> | null;
   screenshot_url: string | null;
+  viewed_at: string | null;
+  view_count: number;
   created_at: string;
   updated_at: string;
 }
