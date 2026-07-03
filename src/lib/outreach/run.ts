@@ -6,6 +6,7 @@ import { config, renderTemplate } from '@/lib/config';
 export const DEFAULT_DAILY_LIMIT = 25;
 
 export interface OutreachSummary {
+  enabled: boolean;
   eligible: number;
   sent: number;
   skipped: number;
@@ -17,9 +18,11 @@ export interface OutreachSummary {
 // Zet automatisch een concept-site klaar als die er nog niet is, en plant een
 // follow-up-taak in over 2 dagen. Respecteert een dagelijkse verzendlimiet.
 export async function runOutreach(opts: { limit?: number } = {}): Promise<OutreachSummary> {
+  const enabled = process.env.OUTREACH_ENABLED === 'true';
   const emailConfigured = !!process.env.RESEND_API_KEY;
-  const summary: OutreachSummary = { eligible: 0, sent: 0, skipped: 0, failed: 0, emailConfigured };
-  if (!emailConfigured) return summary;
+  const summary: OutreachSummary = { enabled, eligible: 0, sent: 0, skipped: 0, failed: 0, emailConfigured };
+  // Vergrendeling: mailt pas als het uitdrukkelijk aan staat.
+  if (!enabled || !emailConfigured) return summary;
 
   const sql = getSql();
 

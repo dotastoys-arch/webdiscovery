@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 interface Summary {
+  enabled: boolean;
   eligible: number;
   sent: number;
   skipped: number;
@@ -46,12 +47,17 @@ export function OutreachButton() {
       </div>
 
       {error && <p className="text-sm text-red-600 mt-3">{error}</p>}
-      {summary && !summary.emailConfigured && (
+      {summary && !summary.enabled && (
+        <p className="text-sm text-amber-700 mt-3">
+          🔒 Mailen staat uit. Zet <code>OUTREACH_ENABLED=true</code> in Vercel zodra je klaar bent om te versturen.
+        </p>
+      )}
+      {summary && summary.enabled && !summary.emailConfigured && (
         <p className="text-sm text-amber-700 mt-3">
           E-mail is nog niet geconfigureerd. Zet <code>RESEND_API_KEY</code> + <code>MAIL_FROM</code> in Vercel.
         </p>
       )}
-      {summary && summary.emailConfigured && (
+      {summary && summary.enabled && summary.emailConfigured && (
         <div className="text-sm text-neutral-700 mt-3 flex gap-5">
           <span><strong>{summary.sent}</strong> verstuurd</span>
           <span><strong>{summary.eligible}</strong> in aanmerking</span>

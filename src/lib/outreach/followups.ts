@@ -3,6 +3,7 @@ import { sendEmail } from '@/lib/email/send';
 import { config, renderTemplate } from '@/lib/config';
 
 export interface FollowupSummary {
+  enabled: boolean;
   due: number;
   sent: number;
   skipped: number;
@@ -12,9 +13,10 @@ export interface FollowupSummary {
 
 // Verwerkt openstaande follow-up-taken waarvan de tijd verstreken is.
 export async function runFollowups(): Promise<FollowupSummary> {
+  const enabled = process.env.OUTREACH_ENABLED === 'true';
   const emailConfigured = !!process.env.RESEND_API_KEY;
-  const summary: FollowupSummary = { due: 0, sent: 0, skipped: 0, failed: 0, emailConfigured };
-  if (!emailConfigured) return summary;
+  const summary: FollowupSummary = { enabled, due: 0, sent: 0, skipped: 0, failed: 0, emailConfigured };
+  if (!enabled || !emailConfigured) return summary;
 
   const sql = getSql();
   const tpl = (await sql`select id, subject, body_html, body_text from email_templates where step = 'followup_2day' and is_active limit 1`)[0];
