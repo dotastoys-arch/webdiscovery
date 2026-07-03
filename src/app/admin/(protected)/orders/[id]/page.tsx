@@ -6,6 +6,7 @@ import { config, euro, formatDate } from '@/lib/config';
 import { PageHeader, StatusBadge } from '../../ui';
 import { DomainSection } from '../../websites/[id]/domain-section';
 import { CopyField } from './copy-field';
+import { SubscriptionCard } from './subscription-card';
 import type { Order } from '@/types/db';
 
 export const dynamic = 'force-dynamic';
@@ -22,6 +23,19 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
   const bestelUrl = `${config.siteUrl}/bestel/${order.id}`;
   const isPaid = ['paid', 'domain_setup', 'delivered'].includes(order.status);
+
+  // Lopend maandabonnement bij deze bestelling (indien recurring aan staat).
+  const subRows = await sql`
+    select id, status, monthly_cents, next_billing_at from subscriptions
+    where order_id = ${order.id} order by created_at desc limit 1`;
+  const sub = subRows[0]
+    ? {
+        id: subRows[0].id as string,
+        status: subRows[0].status as string,
+        monthly_cents: subRows[0].monthly_cents as number,
+        next_billing_at: (subRows[0].next_billing_at as string | null) ?? null,
+      }
+    : null;
 
   return (
     <div>
@@ -81,6 +95,9 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <iframe src={bestelUrl} title="Betaalpagina van de klant" className="w-full" style={{ height: 720, border: 0 }} />
           </div>
         </div>
+
+        {/* Maandabonnement (automatische incasso) */}
+        {sub && <SubscriptionCard sub={sub} />}
 
         {/* Domein koppelen & live zetten (3 stappen) */}
         <DomainSection siteId={order.site_id ?? ''} order={{ id: order.id, status: order.status, domain: order.domain }} canAutoRegister={hasVercel()} />
