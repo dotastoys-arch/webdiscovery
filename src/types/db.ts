@@ -142,7 +142,9 @@ export interface Order {
   lead_id: string | null;
   site_id: string | null;
   amount_cents: number;
+  monthly_cents: number;
   currency: string;
+  plan: string | null;
   status: OrderStatus;
   mollie_payment_id: string | null;
   domain: string | null;

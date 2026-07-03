@@ -22,4 +22,5 @@ export const icons: Record<string, string> = {
   pulse: 'M22 12h-4l-3 9L9 3l-3 9H2',
   globeSmall: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z',
   eye: 'M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+  monitor: 'M2 4h20v12H2zM8 20h8M12 16v4',
 };

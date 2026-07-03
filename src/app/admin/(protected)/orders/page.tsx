@@ -1,6 +1,7 @@
 import { getSql } from '@/lib/db';
 import { PageHeader, Table, Th, Td, StatusBadge, EmptyState } from '../ui';
 import { formatDate, euro } from '@/lib/config';
+import { OrderControls } from './order-controls';
 import type { Order } from '@/types/db';
 
 export const dynamic = 'force-dynamic';
@@ -11,30 +12,30 @@ export default async function OrdersPage() {
 
   return (
     <div>
-      <PageHeader title="Bestellingen" subtitle="€500-opdrachten, betaling (Mollie) en oplevering." />
+      <PageHeader title="Bestellingen" subtitle="€500-opdrachten, betaling (Mollie), domein koppelen en live zetten." />
       {orders.length === 0 ? (
-        <EmptyState>Nog geen bestellingen. Deze komen binnen via de bestelflow (fase 4).</EmptyState>
+        <EmptyState>Nog geen bestellingen. Maak er een via Websites → Betaallink.</EmptyState>
       ) : (
         <Table
           head={
             <>
-              <Th>Klant</Th>
               <Th>Bedrijf</Th>
-              <Th>Domein</Th>
               <Th>Bedrag</Th>
               <Th>Status</Th>
+              <Th>Domein &amp; live</Th>
               <Th>Aangemaakt</Th>
             </>
           }
         >
           {orders.map((o) => (
             <tr key={o.id}>
-              <Td>{o.customer_name ?? o.customer_email ?? '—'}</Td>
-              <Td>{o.customer_company ?? '—'}</Td>
-              <Td>{o.domain ?? '—'}</Td>
+              <Td>{o.customer_company ?? o.customer_email ?? '—'}</Td>
               <Td>{euro(o.amount_cents)}</Td>
               <Td>
                 <StatusBadge status={o.status} />
+              </Td>
+              <Td>
+                <OrderControls id={o.id} status={o.status} domain={o.domain} />
               </Td>
               <Td>{formatDate(o.created_at)}</Td>
             </tr>

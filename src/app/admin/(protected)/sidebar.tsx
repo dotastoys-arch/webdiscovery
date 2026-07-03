@@ -21,7 +21,13 @@ const groups: { label: string; items: { href: string; icon: string; label: strin
       { href: '/admin/emails', icon: 'emails', label: 'Berichten' },
     ],
   },
-  { label: 'Sales', items: [{ href: '/admin/orders', icon: 'orders', label: 'Bestellingen' }] },
+  {
+    label: 'Sales',
+    items: [
+      { href: '/admin/websites', icon: 'monitor', label: 'Websites' },
+      { href: '/admin/orders', icon: 'orders', label: 'Bestellingen' },
+    ],
+  },
   { label: 'Platform', items: [{ href: '/admin/settings', icon: 'settings', label: 'Instellingen' }] },
 ];
 
