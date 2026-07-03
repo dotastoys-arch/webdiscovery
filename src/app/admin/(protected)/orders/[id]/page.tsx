@@ -68,6 +68,20 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           </div>
         )}
 
+        {/* Live-weergave van de betaalpagina — precies wat de klant ziet */}
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h2 className="text-lg font-bold">Betaalpagina</h2>
+              <p className="text-sm text-neutral-500 mt-0.5">Wat de klant ziet — betalen, domein koppelen en live.</p>
+            </div>
+            <a href={bestelUrl} target="_blank" rel="noreferrer" className="text-sm text-indigo-600 hover:underline shrink-0">Openen ↗</a>
+          </div>
+          <div className="rounded-xl border border-neutral-200 overflow-hidden bg-neutral-50">
+            <iframe src={bestelUrl} title="Betaalpagina van de klant" className="w-full" style={{ height: 720, border: 0 }} />
+          </div>
+        </div>
+
         {/* Domein koppelen & live zetten (3 stappen) */}
         <DomainSection siteId={order.site_id ?? ''} order={{ id: order.id, status: order.status, domain: order.domain }} canAutoRegister={hasVercel()} />
       </div>
