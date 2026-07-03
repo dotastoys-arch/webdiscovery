@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { getSql } from '@/lib/db';
 import { PageHeader, Table, Th, Td, StatusBadge, EmptyState } from '../ui';
 import { formatDate, euro } from '@/lib/config';
 import type { Order } from '@/types/db';
@@ -6,13 +6,8 @@ import type { Order } from '@/types/db';
 export const dynamic = 'force-dynamic';
 
 export default async function OrdersPage() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('orders')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(200);
-  const orders = (data ?? []) as Order[];
+  const sql = getSql();
+  const orders = (await sql`select * from orders order by created_at desc limit 200`) as unknown as Order[];
 
   return (
     <div>

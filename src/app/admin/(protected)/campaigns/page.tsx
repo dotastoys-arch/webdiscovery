@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { getSql } from '@/lib/db';
 import { PageHeader, Table, Th, Td, StatusBadge, EmptyState } from '../ui';
 import { formatDate } from '@/lib/config';
 import type { Campaign, EmailTemplate } from '@/types/db';
@@ -6,13 +6,11 @@ import type { Campaign, EmailTemplate } from '@/types/db';
 export const dynamic = 'force-dynamic';
 
 export default async function CampaignsPage() {
-  const supabase = await createClient();
-  const [{ data: campaignData }, { data: templateData }] = await Promise.all([
-    supabase.from('campaigns').select('*').order('created_at', { ascending: false }),
-    supabase.from('email_templates').select('*').order('step'),
-  ]);
-  const campaigns = (campaignData ?? []) as Campaign[];
-  const templates = (templateData ?? []) as EmailTemplate[];
+  const sql = getSql();
+  const [campaigns, templates] = (await Promise.all([
+    sql`select * from campaigns order by created_at desc`,
+    sql`select * from email_templates order by step`,
+  ])) as unknown as [Campaign[], EmailTemplate[]];
 
   return (
     <div>
@@ -47,7 +45,7 @@ export default async function CampaignsPage() {
 
       <h2 className="text-sm font-medium text-neutral-500 mb-3 mt-8">Mail-sjablonen</h2>
       {templates.length === 0 ? (
-        <EmptyState>Geen sjablonen gevonden — draai de seed-migratie (0002_seed.sql).</EmptyState>
+        <EmptyState>Geen sjablonen gevonden — draai de database-setup (setup.sql).</EmptyState>
       ) : (
         <Table
           head={

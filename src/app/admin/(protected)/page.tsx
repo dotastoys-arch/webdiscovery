@@ -1,54 +1,41 @@
-import { createClient } from '@/lib/supabase/server';
+import { getSql } from '@/lib/db';
 import { PageHeader, StatCard, Table, Th, Td, StatusBadge, EmptyState } from './ui';
 import { formatDate, euro } from '@/lib/config';
 import type { Lead } from '@/types/db';
 
 export const dynamic = 'force-dynamic';
 
-async function count(table: string, filter?: (q: any) => any) {
-  const supabase = await createClient();
-  let q = supabase.from(table).select('*', { count: 'exact', head: true });
-  if (filter) q = filter(q);
-  const { count } = await q;
-  return count ?? 0;
-}
-
 export default async function OverviewPage() {
-  const supabase = await createClient();
+  const sql = getSql();
 
-  const [leads, noWebsite, interested, orders, paidRes, recentRes] = await Promise.all([
-    count('leads'),
-    count('leads', (q) => q.eq('has_website', false)),
-    count('leads', (q) => q.in('status', ['replied', 'interested'])),
-    count('orders'),
-    supabase.from('orders').select('amount_cents').eq('status', 'paid'),
-    supabase
-      .from('leads')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(8),
+  const [leadsC, noWebC, interestedC, ordersC, paid, recentRows] = await Promise.all([
+    sql`select count(*)::int as c from leads`,
+    sql`select count(*)::int as c from leads where has_website = false`,
+    sql`select count(*)::int as c from leads where status in ('replied','interested')`,
+    sql`select count(*)::int as c from orders`,
+    sql`select coalesce(sum(amount_cents),0)::int as c from orders where status = 'paid'`,
+    sql`select * from leads order by created_at desc limit 8`,
   ]);
 
-  const revenue = (paidRes.data ?? []).reduce((s, o) => s + (o.amount_cents ?? 0), 0);
-  const recent = (recentRes.data ?? []) as Lead[];
+  const revenue = paid[0].c as number;
+  const recent = recentRows as unknown as Lead[];
 
   return (
     <div>
       <PageHeader title="Overzicht" subtitle="De stand van de pijplijn in één oogopslag." />
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-        <StatCard label="Leads totaal" value={leads} />
-        <StatCard label="Zonder website" value={noWebsite} hint="beste prospects" />
-        <StatCard label="Interesse" value={interested} hint="reactie ontvangen" />
-        <StatCard label="Bestellingen" value={orders} />
+        <StatCard label="Leads totaal" value={leadsC[0].c} />
+        <StatCard label="Zonder website" value={noWebC[0].c} hint="beste prospects" />
+        <StatCard label="Interesse" value={interestedC[0].c} hint="reactie ontvangen" />
+        <StatCard label="Bestellingen" value={ordersC[0].c} />
         <StatCard label="Omzet (betaald)" value={euro(revenue)} />
       </div>
 
       <h2 className="text-sm font-medium text-neutral-500 mb-3">Nieuwste leads</h2>
       {recent.length === 0 ? (
         <EmptyState>
-          Nog geen leads. De discovery-tool (fase 2) vult deze lijst automatisch — of importeer
-          handmatig via Leads.
+          Nog geen leads. Gebruik Discovery om ze te vinden of te importeren.
         </EmptyState>
       ) : (
         <Table

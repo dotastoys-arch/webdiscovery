@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createClient } from '@/lib/supabase/server';
+import { getSession } from '@/lib/auth-server';
 import { searchBusinesses, type RawBusiness } from '@/lib/discovery/places';
 import { ingestBusinesses } from '@/lib/discovery/ingest';
 
@@ -34,11 +34,8 @@ const schema = z.discriminatedUnion('mode', [placesSchema, manualSchema]);
 
 export async function POST(req: NextRequest) {
   // Alleen ingelogde admins.
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  const session = await getSession();
+  if (!session) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 
   const parsed = schema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { hasAuthConfig } from '@/lib/auth';
+import { getSession } from '@/lib/auth-server';
 import { SignOutButton } from './signout-button';
 
 const nav = [
@@ -14,28 +15,24 @@ const nav = [
 ];
 
 export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  // Zonder Supabase-config kan de admin niet draaien — toon een hint i.p.v. crashen.
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  // Zonder auth-config kan de admin niet draaien — toon een hint i.p.v. crashen.
+  if (!hasAuthConfig()) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-neutral-50 p-6">
         <div className="max-w-md text-center">
-          <h1 className="text-lg font-semibold mb-2">Supabase nog niet gekoppeld</h1>
+          <h1 className="text-lg font-semibold mb-2">Admin nog niet geconfigureerd</h1>
           <p className="text-sm text-neutral-600">
-            Zet <code>NEXT_PUBLIC_SUPABASE_URL</code>, <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> en{' '}
-            <code>SUPABASE_SERVICE_ROLE_KEY</code> in <code>.env.local</code> (zie{' '}
-            <code>.env.local.example</code>) en draai de migraties. Daarna werkt de admin.
+            Zet <code>AUTH_SECRET</code>, <code>ADMIN_EMAIL</code>, <code>ADMIN_PASSWORD</code> en{' '}
+            <code>DATABASE_URL</code> (Neon) in <code>.env.local</code> (zie{' '}
+            <code>.env.local.example</code>). Daarna werkt de admin.
           </p>
         </div>
       </div>
     );
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) redirect('/admin/login');
+  const session = await getSession();
+  if (!session) redirect('/admin/login');
 
   return (
     <div className="min-h-screen flex bg-neutral-50 text-neutral-900">
@@ -56,7 +53,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
           ))}
         </nav>
         <div className="p-3 border-t border-neutral-200">
-          <div className="px-3 py-1 text-xs text-neutral-500 truncate">{user.email}</div>
+          <div className="px-3 py-1 text-xs text-neutral-500 truncate">{session.email}</div>
           <SignOutButton />
         </div>
       </aside>

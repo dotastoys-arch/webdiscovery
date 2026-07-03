@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { getSql, hasDb } from '@/lib/db';
 
-// Publieke lead-intake vanaf het offerteformulier. Schrijft via de service-role
-// (RLS blokkeert anon) naar `leads` + `events`. Bevat een honeypot tegen spam.
+// Publieke lead-intake vanaf het offerteformulier. Schrijft naar Neon.
 const schema = z.object({
   name: z.string().min(1, 'Naam is verplicht').max(120),
   email: z.string().email('Ongeldig e-mailadres').max(200),
@@ -11,19 +10,15 @@ const schema = z.object({
   phone: z.string().max(40).optional().or(z.literal('')),
   website: z.string().max(200).optional().or(z.literal('')),
   message: z.string().max(2000).optional().or(z.literal('')),
-  // Honeypot: bots vullen dit; mensen zien het niet.
-  nickname: z.string().max(0).optional().or(z.literal('')),
+  nickname: z.string().max(0).optional().or(z.literal('')), // honeypot
 });
 
 export async function POST(req: NextRequest) {
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
+  if (!hasDb()) {
+    return NextResponse.json({ error: 'Database nog niet gekoppeld.' }, { status: 503 });
   }
 
-  const parsed = schema.safeParse(body);
+  const parsed = schema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json(
       { error: parsed.error.issues[0]?.message ?? 'Ongeldige invoer' },
@@ -32,50 +27,34 @@ export async function POST(req: NextRequest) {
   }
 
   const d = parsed.data;
-  if (d.nickname) {
-    // Honeypot gevuld → doe alsof het lukte, sla niets op.
-    return NextResponse.json({ ok: true });
-  }
+  if (d.nickname) return NextResponse.json({ ok: true }); // honeypot gevuld
 
   const email = d.email.toLowerCase();
-  const db = createAdminClient();
+  const sql = getSql();
 
-  const leadValues = {
-    company_name: d.company || d.name,
-    email,
-    phone: d.phone || null,
-    website_url: d.website || null,
-    has_website: d.website ? true : null,
-    source: 'website',
-    notes: d.message || null,
-    status: 'interested' as const,
-  };
+  try {
+    const existing = await sql`select id from leads where lower(email) = ${email} limit 1`;
+    let leadId: string;
 
-  // Bestaat de lead al (op e-mail)? Dan bijwerken i.p.v. dubbel aanmaken.
-  const { data: existing } = await db
-    .from('leads')
-    .select('id')
-    .ilike('email', email)
-    .maybeSingle();
-
-  let leadId: string | null = null;
-  if (existing) {
-    leadId = existing.id;
-    await db.from('leads').update({ notes: leadValues.notes, status: 'interested' }).eq('id', leadId);
-  } else {
-    const { data: inserted, error } = await db.from('leads').insert(leadValues).select('id').single();
-    if (error) {
-      console.error('[leads intake] insert error', error);
-      return NextResponse.json({ error: 'Er ging iets mis. Probeer het later opnieuw.' }, { status: 500 });
+    if (existing[0]) {
+      leadId = existing[0].id as string;
+      await sql`update leads set notes = ${d.message || null}, status = 'interested', updated_at = now() where id = ${leadId}`;
+    } else {
+      const ins = await sql`
+        insert into leads (company_name, email, phone, website_url, has_website, source, notes, status)
+        values (${d.company || d.name}, ${email}, ${d.phone || null}, ${d.website || null},
+                ${d.website ? true : null}, 'website', ${d.message || null}, 'interested')
+        returning id`;
+      leadId = ins[0].id as string;
     }
-    leadId = inserted.id;
+
+    await sql`
+      insert into events (lead_id, type, data)
+      values (${leadId}, 'website_quote_request', ${JSON.stringify({ name: d.name, message: d.message ?? null })}::jsonb)`;
+
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error('[leads intake]', e);
+    return NextResponse.json({ error: 'Er ging iets mis. Probeer het later opnieuw.' }, { status: 500 });
   }
-
-  await db.from('events').insert({
-    lead_id: leadId,
-    type: 'website_quote_request',
-    data: { name: d.name, message: d.message ?? null },
-  });
-
-  return NextResponse.json({ ok: true });
 }

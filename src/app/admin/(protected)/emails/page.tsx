@@ -1,29 +1,30 @@
-import { createClient } from '@/lib/supabase/server';
+import { getSql } from '@/lib/db';
 import { PageHeader, Table, Th, Td, StatusBadge, EmptyState } from '../ui';
 import { formatDate } from '@/lib/config';
-import type { Message, Lead } from '@/types/db';
+import type { Message } from '@/types/db';
 
 export const dynamic = 'force-dynamic';
 
-type Row = Message & { leads: Pick<Lead, 'company_name'> | null };
+type Row = Message & { lead_company_name: string | null };
 
 export default async function EmailsPage() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('messages')
-    .select('*, leads(company_name)')
-    .order('created_at', { ascending: false })
-    .limit(200);
-  const messages = (data ?? []) as Row[];
+  const sql = getSql();
+  const messages = (await sql`
+    select m.*, l.company_name as lead_company_name
+    from messages m
+    left join leads l on l.id = m.lead_id
+    order by m.created_at desc
+    limit 200
+  `) as unknown as Row[];
 
   return (
     <div>
       <PageHeader
         title="Berichten"
-        subtitle="Verzonden en ontvangen e-mails, inclusief opens en klikken (fase 2)."
+        subtitle="Verzonden en ontvangen e-mails, inclusief opens en klikken."
       />
       {messages.length === 0 ? (
-        <EmptyState>Nog geen berichten. De outreach-engine (fase 2) logt hier alles.</EmptyState>
+        <EmptyState>Nog geen berichten. De outreach-engine logt hier alles.</EmptyState>
       ) : (
         <Table
           head={
@@ -40,7 +41,7 @@ export default async function EmailsPage() {
           {messages.map((m) => (
             <tr key={m.id}>
               <Td>{m.direction === 'outbound' ? '→ uit' : '← in'}</Td>
-              <Td>{m.leads?.company_name ?? '—'}</Td>
+              <Td>{m.lead_company_name ?? '—'}</Td>
               <Td>{m.subject ?? '—'}</Td>
               <Td>{m.step ?? '—'}</Td>
               <Td>

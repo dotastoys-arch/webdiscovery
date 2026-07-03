@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/admin';
+import { getSql } from '@/lib/db';
 import { config } from '@/lib/config';
 import { generateSite } from './generate';
 import type { Lead } from '@/types/db';
@@ -19,46 +19,34 @@ export interface GenerateOutcome {
   previewUrl: string;
 }
 
-// Genereert een concept-site voor een lead en slaat hem op.
+// Genereert een concept-site voor een lead en slaat hem op (Neon).
 export async function createGeneratedSite(leadId: string): Promise<GenerateOutcome> {
-  const db = createAdminClient();
+  const sql = getSql();
 
-  const { data: lead, error } = await db.from('leads').select('*').eq('id', leadId).single();
-  if (error || !lead) throw new Error('Lead niet gevonden');
+  const rows = await sql`select * from leads where id = ${leadId} limit 1`;
+  const lead = rows[0] as Lead | undefined;
+  if (!lead) throw new Error('Lead niet gevonden');
 
-  const result = await generateSite(lead as Lead);
+  const result = await generateSite(lead);
 
-  // Uniek slug: bedrijfsnaam + kort willekeurig achtervoegsel (uit de lead-id).
   const suffix = leadId.replace(/-/g, '').slice(0, 6);
   const slug = `${slugify(lead.company_name) || 'site'}-${suffix}`;
   const previewUrl = `${config.siteUrl}/preview/${slug}`;
+  const contentJson = JSON.stringify(result.content);
+  const modulesJson = JSON.stringify(result.modules);
 
-  const { data: site, error: upErr } = await db
-    .from('generated_sites')
-    .upsert(
-      {
-        lead_id: leadId,
-        status: 'ready',
-        preview_slug: slug,
-        preview_url: previewUrl,
-        source_website_url: lead.website_url,
-        content: result.content,
-        modules: result.modules,
-      },
-      { onConflict: 'preview_slug' }
-    )
-    .select('id')
-    .single();
+  const site = await sql`
+    insert into generated_sites (lead_id, status, preview_slug, preview_url, source_website_url, content, modules)
+    values (${leadId}, 'ready', ${slug}, ${previewUrl}, ${lead.website_url}, ${contentJson}::jsonb, ${modulesJson}::jsonb)
+    on conflict (preview_slug) do update set
+      status = 'ready', preview_url = ${previewUrl}, source_website_url = ${lead.website_url},
+      content = ${contentJson}::jsonb, modules = ${modulesJson}::jsonb, updated_at = now()
+    returning id`;
 
-  if (upErr) throw new Error(`Opslaan mislukt: ${upErr.message}`);
+  await sql`update leads set status = 'site_generated', updated_at = now() where id = ${leadId}`;
+  await sql`
+    insert into events (lead_id, type, data)
+    values (${leadId}, 'site_generated', ${JSON.stringify({ slug, modules: result.modules })}::jsonb)`;
 
-  // Lead bijwerken + event loggen.
-  await db.from('leads').update({ status: 'site_generated' }).eq('id', leadId);
-  await db.from('events').insert({
-    lead_id: leadId,
-    type: 'site_generated',
-    data: { slug, modules: result.modules },
-  });
-
-  return { siteId: site.id, slug, previewUrl };
+  return { siteId: site[0].id as string, slug, previewUrl };
 }

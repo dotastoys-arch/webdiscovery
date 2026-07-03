@@ -1,8 +1,8 @@
 import { Resend } from 'resend';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { getSql } from '@/lib/db';
 
 // Dunne wrapper rond Resend. Respecteert de suppressielijst (AVG/afmeldingen)
-// en logt elke verzending in de messages-tabel.
+// en logt elke verzending in de messages-tabel (Neon).
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -18,21 +18,13 @@ export interface SendArgs {
 }
 
 export async function sendEmail(args: SendArgs) {
-  const db = createAdminClient();
+  const sql = getSql();
 
   // 1. Suppressie-check — nooit mailen naar afgemelde/bounced adressen.
-  const { data: suppressed } = await db
-    .from('suppressions')
-    .select('id')
-    .ilike('email', args.to)
-    .maybeSingle();
-  if (suppressed) {
-    return { skipped: true as const, reason: 'suppressed' };
-  }
+  const suppressed = await sql`select id from suppressions where lower(email) = ${args.to.toLowerCase()} limit 1`;
+  if (suppressed[0]) return { skipped: true as const, reason: 'suppressed' };
 
-  if (!resend) {
-    throw new Error('RESEND_API_KEY ontbreekt — mail niet verzonden');
-  }
+  if (!resend) throw new Error('RESEND_API_KEY ontbreekt — mail niet verzonden');
 
   const from = process.env.MAIL_FROM ?? 'Webdiscovery <hallo@mail.webdiscovery.nl>';
 
@@ -44,26 +36,17 @@ export async function sendEmail(args: SendArgs) {
     html: args.html,
     text: args.text,
     headers: {
-      // Verplichte one-click unsubscribe voor goede deliverability.
       'List-Unsubscribe': `<${process.env.NEXT_PUBLIC_SITE_URL}/api/unsubscribe?email=${encodeURIComponent(args.to)}>`,
       'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
     },
   });
 
   // 3. Loggen in messages.
-  await db.from('messages').insert({
-    lead_id: args.leadId ?? null,
-    campaign_id: args.campaignId ?? null,
-    template_id: args.templateId ?? null,
-    step: args.step ?? null,
-    direction: 'outbound',
-    status: error ? 'failed' : 'sent',
-    subject: args.subject,
-    body_html: args.html,
-    body_text: args.text ?? null,
-    provider_id: data?.id ?? null,
-    sent_at: error ? null : new Date().toISOString(),
-  });
+  await sql`
+    insert into messages (lead_id, campaign_id, template_id, step, direction, status, subject, body_html, body_text, provider_id, sent_at)
+    values (${args.leadId ?? null}, ${args.campaignId ?? null}, ${args.templateId ?? null}, ${args.step ?? null},
+            'outbound', ${error ? 'failed' : 'sent'}, ${args.subject}, ${args.html}, ${args.text ?? null},
+            ${data?.id ?? null}, ${error ? null : new Date().toISOString()})`;
 
   if (error) throw new Error(`Resend fout: ${error.message}`);
   return { skipped: false as const, id: data?.id };

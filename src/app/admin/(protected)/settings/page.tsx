@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { getSql } from '@/lib/db';
 import { PageHeader, EmptyState } from '../ui';
 import type { CompanyProfile } from '@/types/db';
 
@@ -14,9 +14,9 @@ function Field({ label, value }: { label: string; value: string | null }) {
 }
 
 export default async function SettingsPage() {
-  const supabase = await createClient();
-  const { data } = await supabase.from('company_profile').select('*').limit(1).single();
-  const p = data as CompanyProfile | null;
+  const sql = getSql();
+  const rows = (await sql`select * from company_profile limit 1`) as unknown as CompanyProfile[];
+  const p = rows[0] ?? null;
 
   return (
     <div className="max-w-2xl">
@@ -25,7 +25,7 @@ export default async function SettingsPage() {
         subtitle="Je bedrijfsgegevens — verschijnen in mailfooters (KvK = vertrouwen)."
       />
       {!p ? (
-        <EmptyState>Geen bedrijfsprofiel gevonden — draai de seed-migratie (0002_seed.sql).</EmptyState>
+        <EmptyState>Geen bedrijfsprofiel gevonden — draai de database-setup (setup.sql).</EmptyState>
       ) : (
         <div className="rounded-xl border border-neutral-200 bg-white p-6">
           <Field label="Naam" value={p.name} />
@@ -40,7 +40,7 @@ export default async function SettingsPage() {
           <Field label="Afzendernaam" value={p.sender_name} />
           <Field label="Verzendadres" value={p.sender_email} />
           <p className="text-xs text-neutral-400 mt-4">
-            Aanpassen kan nu direct in Supabase (tabel <code>company_profile</code>). Een
+            Aanpassen kan nu direct in de database (tabel <code>company_profile</code>). Een
             bewerk-formulier komt in een latere fase.
           </p>
         </div>

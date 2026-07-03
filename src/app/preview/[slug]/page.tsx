@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { getSql, hasDb } from '@/lib/db';
 import { siteContentSchema } from '@/lib/generate/schema';
 import { MODULES, type ModuleId } from '@/lib/modules';
 
@@ -9,22 +9,18 @@ export const dynamic = 'force-dynamic';
 export default async function PreviewPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  // Supabase nog niet gekoppeld? Toon een nette melding i.p.v. crashen.
-  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  // Database nog niet gekoppeld? Toon een nette melding i.p.v. crashen.
+  if (!hasDb()) {
     return (
       <div className="min-h-screen flex items-center justify-center text-sm text-neutral-500 p-8 text-center">
-        Preview vereist een gekoppelde database (Supabase).
+        Preview vereist een gekoppelde database.
       </div>
     );
   }
 
-  const db = createAdminClient();
-  const { data: site } = await db
-    .from('generated_sites')
-    .select('*')
-    .eq('preview_slug', slug)
-    .maybeSingle();
-
+  const sql = getSql();
+  const rows = await sql`select * from generated_sites where preview_slug = ${slug} limit 1`;
+  const site = rows[0];
   if (!site) notFound();
 
   const parsed = siteContentSchema.safeParse(site.content);

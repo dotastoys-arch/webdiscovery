@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { getSql, hasDb } from '@/lib/db';
 
 // Werkende afmeld-endpoint (verplicht in élke mail). Zet het adres op de
-// suppressielijst en markeert de lead als afgemeld. Werkt via GET (link in
-// mail) en POST (one-click unsubscribe volgens RFC 8058).
+// suppressielijst en markeert de lead als afgemeld. GET (link) + POST (one-click).
 async function unsubscribe(email: string) {
-  const db = createAdminClient();
-  await db.from('suppressions').upsert(
-    { email: email.toLowerCase(), reason: 'unsubscribe' },
-    { onConflict: 'email' }
-  );
-  await db.from('leads').update({ status: 'unsubscribed' }).ilike('email', email);
+  if (!hasDb()) return;
+  const sql = getSql();
+  const e = email.toLowerCase();
+  await sql`insert into suppressions (email, reason) values (${e}, 'unsubscribe')
+            on conflict (lower(email)) do nothing`;
+  await sql`update leads set status = 'unsubscribed', updated_at = now() where lower(email) = ${e}`;
 }
 
 export async function GET(req: NextRequest) {
