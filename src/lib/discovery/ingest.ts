@@ -46,6 +46,7 @@ export async function ingestBusinesses(
     if (email) score += 3;
     if (enrich.outdated) score += 2;
     if (!hasWebsite) score -= 1;
+    if (b.rating && b.rating >= 4.5) score += 1; // goed beoordeeld = serieus bedrijf
 
     const notesParts: string[] = [];
     if (enrich.outdatedReasons.length) notesParts.push('Verouderd: ' + enrich.outdatedReasons.join(', '));
@@ -69,14 +70,14 @@ export async function ingestBusinesses(
           company_name = ${b.name}, website_url = ${b.website}, has_website = ${hasWebsite},
           email = ${email}, phone = ${b.phone}, address = ${b.address}, city = ${b.city},
           source = ${source}, source_ref = ${b.placeId}, notes = ${notes}, score = ${score},
-          updated_at = now()
+          rating = ${b.rating ?? null}, updated_at = now()
         where id = ${existingId}`;
       summary.updated++;
     } else {
       await sql`
-        insert into leads (company_name, website_url, has_website, email, phone, address, city, source, source_ref, notes, score, status)
+        insert into leads (company_name, website_url, has_website, email, phone, address, city, source, source_ref, notes, score, rating, status)
         values (${b.name}, ${b.website}, ${hasWebsite}, ${email}, ${b.phone}, ${b.address}, ${b.city},
-                ${source}, ${b.placeId}, ${notes}, ${score}, 'new')`;
+                ${source}, ${b.placeId}, ${notes}, ${score}, ${b.rating ?? null}, 'new')`;
       summary.created++;
     }
   }

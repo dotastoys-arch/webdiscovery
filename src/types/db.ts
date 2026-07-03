@@ -63,6 +63,7 @@ export interface Lead {
   notes: string | null;
   status: LeadStatus;
   score: number | null;
+  rating: number | null;
   discovered_at: string;
   created_at: string;
   updated_at: string;

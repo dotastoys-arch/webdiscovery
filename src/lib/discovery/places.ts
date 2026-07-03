@@ -13,6 +13,7 @@ export interface RawBusiness {
   address: string | null;
   city: string | null;
   placeId: string | null;
+  rating?: number | null;
   email?: string | null; // niet door Places gezet; wel bij handmatige import
 }
 
@@ -23,6 +24,7 @@ interface PlacesResponse {
     formattedAddress?: string;
     websiteUri?: string;
     nationalPhoneNumber?: string;
+    rating?: number;
     addressComponents?: Array<{ longText?: string; types?: string[] }>;
   }>;
   nextPageToken?: string;
@@ -55,7 +57,7 @@ export async function searchBusinesses(query: string, maxResults = 20): Promise<
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': key,
         'X-Goog-FieldMask':
-          'places.id,places.displayName,places.formattedAddress,places.websiteUri,places.nationalPhoneNumber,places.addressComponents,nextPageToken',
+          'places.id,places.displayName,places.formattedAddress,places.websiteUri,places.nationalPhoneNumber,places.rating,places.addressComponents,nextPageToken',
       },
       body: JSON.stringify({
         textQuery: query,
@@ -79,6 +81,7 @@ export async function searchBusinesses(query: string, maxResults = 20): Promise<
         address: p.formattedAddress ?? null,
         city: extractCity(p.addressComponents),
         placeId: p.id ?? null,
+        rating: p.rating ?? null,
       });
     }
 

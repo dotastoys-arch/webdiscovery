@@ -25,7 +25,8 @@ function parseRows(text: string) {
 
 export function DiscoveryForm() {
   const [tab, setTab] = useState<'places' | 'manual'>('places');
-  const [query, setQuery] = useState('');
+  const [branche, setBranche] = useState('');
+  const [plaats, setPlaats] = useState('');
   const [maxResults, setMaxResults] = useState(20);
   const [enrich, setEnrich] = useState(true);
   const [paste, setPaste] = useState('');
@@ -73,14 +74,25 @@ export function DiscoveryForm() {
 
       {tab === 'places' ? (
         <div className="space-y-4 rounded-xl border border-neutral-200 bg-white p-6">
-          <div>
-            <label className="block text-sm font-medium mb-1">Zoekopdracht</label>
-            <input
-              className={`${input} w-full`}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="bv. kappers in Utrecht"
-            />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Branche / zoekterm</label>
+              <input
+                className={`${input} w-full`}
+                value={branche}
+                onChange={(e) => setBranche(e.target.value)}
+                placeholder="bv. kappers"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Plaats</label>
+              <input
+                className={`${input} w-full`}
+                value={plaats}
+                onChange={(e) => setPlaats(e.target.value)}
+                placeholder="bv. Utrecht"
+              />
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <label className="text-sm">
@@ -100,8 +112,15 @@ export function DiscoveryForm() {
             </label>
           </div>
           <button
-            onClick={() => run({ mode: 'places', query, maxResults, enrich })}
-            disabled={running || query.length < 2}
+            onClick={() =>
+              run({
+                mode: 'places',
+                query: `${branche.trim()}${plaats.trim() ? ` in ${plaats.trim()}` : ''}`,
+                maxResults,
+                enrich,
+              })
+            }
+            disabled={running || branche.trim().length < 2}
             className="rounded-lg bg-blue-600 text-white px-5 py-2 text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
           >
             {running ? 'Zoeken…' : 'Zoek & importeer'}
