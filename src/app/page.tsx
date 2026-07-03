@@ -53,13 +53,18 @@ export default function Home() {
             Erkend Nederlands webbureau · gebouwd voor AI
           </span>
           <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-            Zet je bedrijf online —{' '}
-            <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">compleet, in dagen.</span>
+            Complete websites voor mens én AI —{' '}
+            <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">zodat jouw bedrijf gevonden wordt.</span>
           </h1>
           <p className="mt-6 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Een complete website mét alle tools die jouw branche nodig heeft — boekingen, offertes,
-            webshop, CMS. Zelf te beheren en vindbaar door mens én AI. Vanaf €500,-.
+            Wij bouwen alles-in-één websites voor lokale ondernemers: met boekingen, offertes, webshop
+            en een CMS dat je volledig zelf beheert. Klaar om nieuwe klanten binnen te halen — vanaf €500,-.
           </p>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-medium text-slate-600">
+            {['Compleet met alle tools', 'Zelf te beheren', 'Vindbaar in Google én AI', 'Erkend NL webbureau'].map((t) => (
+              <span key={t} className="flex items-center gap-1.5"><Icon path={ic.check} className="w-4 h-4 text-indigo-600" /> {t}</span>
+            ))}
+          </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link href="/offerte" className="rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-7 py-3.5 text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-indigo-600/25">
               Vraag een gratis ontwerp aan
@@ -120,6 +125,31 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4 text-lg font-bold text-slate-400">
             {['Mollie', 'Cal.com', 'Google', 'WhatsApp', 'Shopify'].map((p) => <span key={p}>{p}</span>)}
           </div>
+        </div>
+      </section>
+
+      {/* Showcase: echte voorbeelden */}
+      <section className="mx-auto max-w-6xl px-6 pt-20 pb-4">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="inline-flex items-center gap-2 rounded-full bg-indigo-50 text-indigo-600 px-3 py-1 text-xs font-semibold">Voorbeelden</span>
+          <h2 className="mt-4 text-3xl md:text-4xl font-extrabold tracking-tight">Zo bouwen we voor jouw branche</h2>
+          <p className="mt-3 text-slate-600">Elke branche krijgt de juiste look en tools — hier een paar concepten.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            { img: '/img/voorbeeld-restaurant.jpg', t: 'Restaurant' },
+            { img: '/img/voorbeeld-kapsalon.jpg', t: 'Kapsalon' },
+            { img: '/img/voorbeeld-aannemer.jpg', t: 'Aannemer' },
+          ].map((x) => (
+            <div key={x.t} className="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={x.img} alt={`Voorbeeldwebsite voor een ${x.t.toLowerCase()}`} className="w-full aspect-[16/10] object-cover" />
+              <div className="px-5 py-3 flex items-center justify-between">
+                <span className="font-semibold text-sm">{x.t}</span>
+                <span className="text-[11px] uppercase tracking-wide text-slate-400">Concept</span>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
