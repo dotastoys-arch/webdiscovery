@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       if (typeof confirmedPriceCents === 'number' && check.priceCents > confirmedPriceCents) {
         return NextResponse.json({ error: 'Prijs is gewijzigd — controleer opnieuw.', priceCents: check.priceCents }, { status: 409 });
       }
-      await buyDomain(d, check.priceCents);
+      await buyDomain(d, check.priceCents, check.years);
     }
     // Beschikbaar of niet (klant kan al eigenaar zijn): koppel aan project.
     await attachDomainToProject(d);
