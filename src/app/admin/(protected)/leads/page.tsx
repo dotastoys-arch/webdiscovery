@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getSql } from '@/lib/db';
 import { PageHeader, Table, Th, Td, StatusBadge, EmptyState } from '../ui';
 import { GenerateButton } from './generate-button';
+import { DeleteLeadButton, DeleteAllButton } from './delete-controls';
 import type { Lead } from '@/types/db';
 
 export const dynamic = 'force-dynamic';
@@ -58,12 +59,15 @@ export default async function LeadsPage({
             </Link>
           ))}
         </div>
-        <a
-          href="/api/admin/leads/export"
-          className="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm font-medium hover:bg-neutral-50"
-        >
-          ↓ Exporteer CSV
-        </a>
+        <div className="flex items-center gap-2">
+          <a
+            href="/api/admin/leads/export"
+            className="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm font-medium hover:bg-neutral-50"
+          >
+            ↓ Exporteer CSV
+          </a>
+          <DeleteAllButton count={rows.length} />
+        </div>
       </div>
 
       {rows.length === 0 ? (
@@ -80,6 +84,7 @@ export default async function LeadsPage({
               <Th>Score</Th>
               <Th>Status</Th>
               <Th>Site</Th>
+              <Th> </Th>
             </>
           }
         >
@@ -106,6 +111,9 @@ export default async function LeadsPage({
               </Td>
               <Td>
                 <GenerateButton leadId={l.id} initialPreviewUrl={l.preview_url} />
+              </Td>
+              <Td>
+                <DeleteLeadButton id={l.id} name={l.company_name} />
               </Td>
             </tr>
           ))}
