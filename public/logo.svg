@@ -1,8 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 48" width="260" height="48">
-  <g transform="translate(4,8)">
-    <circle cx="16" cy="16" r="12" fill="none" stroke="#1b1712" stroke-width="2"/>
-    <circle cx="16" cy="16" r="3" fill="#1b1712"/>
-    <circle cx="25" cy="9" r="3.2" fill="#e63917"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268 48" width="268" height="48">
+  <g transform="translate(6,8)">
+    <path d="M2 6 L7 22 L14 10 L21 22 L26 6" fill="none" stroke="#1b1712" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="26" cy="6" r="3" fill="#e63917"/>
   </g>
   <text x="46" y="33" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="26" fill="#1b1712">
     <tspan>Web</tspan><tspan font-style="italic">Discovery</tspan>

@@ -1,12 +1,18 @@
 import Link from 'next/link';
 
-/** Het merkteken: ring (het web) · kern (jij) · vermiljoen stip (de discovery). */
+/** Het merkteken "Route-W": een W als ontdekkingsroute die eindigt in de
+ *  vermiljoen vondst-stip. */
 export function LogoMark({ className = 'w-7 h-7' }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" className={className} aria-hidden="true" fill="none">
-      <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="2" />
-      <circle cx="16" cy="16" r="3" fill="currentColor" />
-      <circle cx="25" cy="9" r="3.2" style={{ fill: 'var(--accent)' }} />
+      <path
+        d="M5 9 L9.5 23 L16 12.5 L22.5 23 L27 9"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="27" cy="9" r="2.8" style={{ fill: 'var(--accent)' }} />
     </svg>
   );
 }
