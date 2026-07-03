@@ -4,6 +4,7 @@ import { getSql } from '@/lib/db';
 import { siteContentSchema } from '@/lib/generate/schema';
 import { PageHeader } from '../../ui';
 import { EditForm } from './edit-form';
+import { DomainSection } from './domain-section';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,13 @@ export default async function EditWebsitePage({ params }: { params: Promise<{ id
   if (!parsed.success) notFound();
   const c = parsed.data;
 
+  // Nieuwste bestelling voor deze site (voor het domein/live-onderdeel).
+  const orderRows = await sql`
+    select id, status, domain from orders where site_id = ${id} order by created_at desc limit 1`;
+  const order = orderRows[0]
+    ? { id: orderRows[0].id as string, status: orderRows[0].status as string, domain: (orderRows[0].domain as string | null) ?? null }
+    : null;
+
   return (
     <div>
       <div className="mb-4">
@@ -29,19 +37,28 @@ export default async function EditWebsitePage({ params }: { params: Promise<{ id
         title={`Website — ${site.company_name ?? 'onbekend'}`}
         subtitle="Pas de teksten en kleur aan. Wijzigingen zijn direct zichtbaar op de preview."
       />
-      <EditForm
-        siteId={id}
-        previewUrl={site.preview_url as string | null}
-        initial={{
-          tagline: c.brand.tagline,
-          accent: c.theme.accent,
-          headline: c.hero.headline,
-          subheadline: c.hero.subheadline,
-          ctaLabel: c.hero.ctaLabel,
-          aboutTitle: c.about.title,
-          aboutBody: c.about.body,
-        }}
-      />
+      <div className="space-y-8">
+        <section>
+          <h2 className="text-lg font-bold mb-3">Website</h2>
+          <EditForm
+            siteId={id}
+            previewUrl={site.preview_url as string | null}
+            initial={{
+              tagline: c.brand.tagline,
+              accent: c.theme.accent,
+              headline: c.hero.headline,
+              subheadline: c.hero.subheadline,
+              ctaLabel: c.hero.ctaLabel,
+              aboutTitle: c.about.title,
+              aboutBody: c.about.body,
+            }}
+          />
+        </section>
+
+        <section>
+          <DomainSection siteId={id} order={order} />
+        </section>
+      </div>
     </div>
   );
 }

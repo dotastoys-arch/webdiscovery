@@ -28,9 +28,9 @@ export default async function BestelPage({ params }: { params: Promise<{ orderId
 
   // Voortgang na betaling.
   const steps = [
-    { title: 'Betaling ontvangen', desc: 'Je bestelling is bevestigd.' },
-    { title: 'Domein koppelen', desc: 'Wij koppelen jouw domeinnaam aan de website.' },
-    { title: 'Website gaat live', desc: 'Je site staat online — klaar voor bezoekers.' },
+    { title: 'Betaald', desc: 'Je betaling is binnen.' },
+    { title: 'Domein koppelen', desc: 'Wij zetten jouw domeinnaam op de website.' },
+    { title: 'Online', desc: 'Je website staat live.' },
   ];
   const doneUpTo = status === 'delivered' ? 3 : status === 'domain_setup' ? 2 : 1; // 1 = betaald
 
@@ -51,27 +51,27 @@ export default async function BestelPage({ params }: { params: Promise<{ orderId
             </div>
 
             <div className="mt-8 rounded-2xl border border-slate-200 p-6 shadow-sm">
-              <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-5">Wat er nu gebeurt</h2>
-              <ol className="space-y-5">
+              <h2 className="text-base font-bold mb-6">Wat er nu gebeurt</h2>
+              <ol className="space-y-6">
                 {steps.map((s, i) => {
                   const n = i + 1;
                   const done = n < doneUpTo;
                   const active = n === doneUpTo;
                   return (
-                    <li key={s.title} className="flex gap-3.5">
+                    <li key={s.title} className="flex items-center gap-4">
                       <span
-                        className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                        className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-base font-bold ${
                           done ? 'bg-emerald-500 text-white' : active ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'
                         }`}
                       >
                         {done ? '✓' : n}
                       </span>
-                      <div className="pt-0.5">
-                        <div className={`text-sm font-semibold ${active ? 'text-indigo-700' : done ? 'text-slate-800' : 'text-slate-500'}`}>
+                      <div>
+                        <div className={`text-base font-bold ${active ? 'text-indigo-700' : done ? 'text-slate-900' : 'text-slate-400'}`}>
                           {s.title}
-                          {active && <span className="ml-2 text-[11px] font-medium text-indigo-500">• nu bezig</span>}
+                          {active && <span className="ml-2 align-middle text-[11px] font-semibold text-white bg-indigo-600 rounded-full px-2 py-0.5">nu bezig</span>}
                         </div>
-                        <div className="text-xs text-slate-500 mt-0.5">{s.desc}</div>
+                        <div className="text-sm text-slate-500 mt-0.5">{s.desc}</div>
                       </div>
                     </li>
                   );
