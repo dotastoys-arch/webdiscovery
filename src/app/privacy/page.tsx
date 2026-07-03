@@ -17,9 +17,10 @@ export default function PrivacyPage() {
           <section>
             <h2 className="font-semibold text-neutral-900 mb-1">1. Wie wij zijn</h2>
             <p>
-              WebDiscovery (KvK <strong>[VUL IN]</strong>), gevestigd te <strong>[ADRES, PLAATS]</strong>,
-              is verantwoordelijk voor de verwerking van persoonsgegevens zoals beschreven in dit
-              beleid. Contact: <a href="mailto:info@webdiscovery.nl" className="underline">info@webdiscovery.nl</a>.
+              WebDiscovery (KvK <strong>96004177</strong>, BTW NL005189518B08), gevestigd te
+              <strong> Pijlspitskreek 3, 2241 MT Wassenaar</strong>, is verantwoordelijk voor de
+              verwerking van persoonsgegevens zoals beschreven in dit beleid. Contact:{' '}
+              <a href="mailto:info@webdiscovery.nl" className="underline">info@webdiscovery.nl</a>.
             </p>
           </section>
 

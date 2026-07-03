@@ -13,9 +13,10 @@ insert into company_profile
   (name, legal_name, kvk_number, vat_number, address, postal_code, city,
    email, phone, website, sender_name, sender_email, standard_price_cents)
 values
-  ('Webdiscovery', 'VUL_IN B.V.', 'VUL_IN', 'VUL_IN', 'VUL_IN', 'VUL_IN', 'VUL_IN',
-   'info@webdiscovery.nl', 'VUL_IN', 'https://webdiscovery.nl',
-   'Team Webdiscovery', 'hallo@mail.webdiscovery.nl', 50000);
+  ('WebDiscovery', 'WebDiscovery', '96004177', 'NL005189518B08',
+   'Pijlspitskreek 3', '2241 MT', 'Wassenaar',
+   'info@webdiscovery.nl', '+31 85 212 90 77', 'https://webdiscovery.nl',
+   'Team WebDiscovery', 'info@webdiscovery.nl', 50000);
 
 -- ---------- INTRO: eerste contact ----------
 insert into email_templates (step, name, subject, body_html, body_text) values

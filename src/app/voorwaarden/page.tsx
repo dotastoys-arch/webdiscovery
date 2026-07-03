@@ -17,8 +17,8 @@ export default function VoorwaardenPage() {
           <section>
             <h2 className="font-semibold text-neutral-900 mb-1">1. Wie wij zijn</h2>
             <p>
-              Deze voorwaarden gelden voor alle diensten van WebDiscovery (KvK <strong>[VUL IN]</strong>),
-              gevestigd te <strong>[ADRES, PLAATS]</strong>.
+              Deze voorwaarden gelden voor alle diensten van WebDiscovery (KvK <strong>96004177</strong>,
+              BTW NL005189518B08), gevestigd te <strong>Pijlspitskreek 3, 2241 MT Wassenaar</strong>.
             </p>
           </section>
 
