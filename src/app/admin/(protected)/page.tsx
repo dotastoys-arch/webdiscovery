@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSql } from '@/lib/db';
 import { PageHeader, StatCard, Card, CardHeader, Table, Th, Td, StatusBadge, EmptyState } from './ui';
+import { icons } from './icons';
 import { euro } from '@/lib/config';
 import type { Lead } from '@/types/db';
 
@@ -57,12 +58,12 @@ export default async function OverviewPage() {
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-        <StatCard label="Leads totaal" value={c.leads} icon="leads" tint="indigo"
+        <StatCard label="Leads totaal" value={c.leads} icon={icons.leads} tint="indigo"
           trend={c.new_week ? { value: `${c.new_week} deze week`, up: true } : undefined} />
-        <StatCard label="Zonder website" value={c.no_website} icon="discovery" tint="sky" hint="beste prospects" />
-        <StatCard label="Interesse" value={c.interested} icon="spark" tint="amber" hint="reactie ontvangen" />
-        <StatCard label="Sites gemaakt" value={c.sites} icon="bag" tint="violet" />
-        <StatCard label="Omzet" value={euro(c.revenue)} icon="revenue" tint="green" />
+        <StatCard label="Zonder website" value={c.no_website} icon={icons.discovery} tint="sky" hint="beste prospects" />
+        <StatCard label="Interesse" value={c.interested} icon={icons.spark} tint="amber" hint="reactie ontvangen" />
+        <StatCard label="Sites gemaakt" value={c.sites} icon={icons.bag} tint="violet" />
+        <StatCard label="Omzet" value={euro(c.revenue)} icon={icons.revenue} tint="green" />
       </div>
 
       {/* Activity + cities */}
