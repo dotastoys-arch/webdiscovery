@@ -75,6 +75,14 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ───────── Hero-beeld ───────── */}
+      <section className="mx-auto max-w-[1200px] px-6 pb-12">
+        <div className="rounded-2xl overflow-hidden border border-[var(--hair)]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/img/hero.jpg" alt="" className="w-full h-[240px] md:h-[440px] object-cover" />
+        </div>
+      </section>
+
       {/* ───────── Marquee ───────── */}
       <div className="hair-t hair-b py-4 overflow-hidden">
         <div className="marquee-track">
@@ -205,6 +213,31 @@ export default function Home() {
                 Bekijk de live site →
               </a>
             </div>
+          </div>
+
+          {/* Branche-voorbeelden (concepten) */}
+          <div className="mt-16">
+            <div className="flex items-baseline justify-between mb-6">
+              <h3 className="font-display text-2xl md:text-3xl">Voor elke branche een voorbeeld</h3>
+              <span className="text-[12px] uppercase tracking-[0.2em] text-[var(--ink-soft)]">Concepten</span>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { img: '/img/voorbeeld-restaurant.jpg', t: 'Restaurant' },
+                { img: '/img/voorbeeld-kapsalon.jpg', t: 'Kapsalon' },
+                { img: '/img/voorbeeld-aannemer.jpg', t: 'Aannemer' },
+              ].map((x) => (
+                <div key={x.t} className="rounded-2xl border border-[var(--hair)] overflow-hidden bg-white">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={x.img} alt={`Voorbeeldwebsite voor een ${x.t.toLowerCase()}`} className="w-full aspect-[16/10] object-cover" />
+                  <div className="px-5 py-3 flex items-center justify-between">
+                    <span className="font-medium">{x.t}</span>
+                    <span className="text-[11px] uppercase tracking-[0.14em] text-[var(--ink-soft)]">Voorbeeld</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-[var(--ink-soft)] mt-4">Voorbeelden van wat we voor jouw branche kunnen bouwen.</p>
           </div>
         </div>
       </section>
