@@ -29,7 +29,7 @@ export default async function PreviewPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <ViewTracker slug={slug} />
-      <PreviewSite content={parsed.data} modules={(site.modules as ModuleId[]) ?? []} />
+      <PreviewSite content={parsed.data} modules={(site.modules as ModuleId[]) ?? []} slug={slug} />
     </>
   );
 }

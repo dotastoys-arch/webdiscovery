@@ -3,7 +3,7 @@ import type { SiteContent } from '@/lib/generate/schema';
 import { MODULES, type ModuleId } from '@/lib/modules';
 
 // Rendert een gegenereerde concept-website in de kleur van de klant.
-export function PreviewSite({ content: c, modules }: { content: SiteContent; modules: ModuleId[] }) {
+export function PreviewSite({ content: c, modules, slug }: { content: SiteContent; modules: ModuleId[]; slug: string }) {
   const accent = c.theme.accent || '#2563eb';
   const tint = accent + '14'; // ~8% opacity
   const navSections = [
@@ -20,7 +20,7 @@ export function PreviewSite({ content: c, modules }: { content: SiteContent; mod
       <div className="bg-neutral-900 text-white text-sm">
         <div className="mx-auto max-w-6xl px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
           <span>✨ Concept gemaakt door <strong>WebDiscovery</strong> voor {c.brand.name}</span>
-          <Link href="/offerte" className="rounded-full bg-white text-neutral-900 px-4 py-1.5 text-xs font-semibold hover:bg-neutral-100">
+          <Link href={`/bestel/start/${slug}`} className="rounded-full bg-white text-neutral-900 px-4 py-1.5 text-xs font-semibold hover:bg-neutral-100">
             Deze website bestellen
           </Link>
         </div>
