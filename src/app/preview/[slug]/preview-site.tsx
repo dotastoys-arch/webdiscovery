@@ -232,7 +232,7 @@ export function PreviewSite({ content: c, modules, slug }: { content: SiteConten
       <footer className="bg-neutral-900 text-neutral-400 text-center text-xs py-8 px-6">
         <p>
           Dit is een concept-website gemaakt door WebDiscovery.{' '}
-          <Link href="/offerte" className="text-white underline">Bestel deze website</Link>
+          <Link href={`/bestel/start/${slug}`} className="text-white underline">Bestel deze website</Link>
         </p>
       </footer>
     </div>
