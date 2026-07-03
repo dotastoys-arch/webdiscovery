@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f3ede1;      /* warm papier */
+  --paper-2: #ece4d4;    /* iets dieper */
+  --ink: #1b1712;        /* bijna-zwarte inkt */
+  --ink-soft: #5b524691; /* gedempt */
+  --accent: #e63917;     /* vermiljoen */
+  --accent-ink: #b62a10;
+  --hair: #1b171220;     /* hairline */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+/* Karaktervolle display-serif */
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+/* Subtiele grain-overlay voor sfeer/diepte */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+}
+body > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Hairline helpers */
+.hair-t { border-top: 1px solid var(--hair); }
+.hair-b { border-bottom: 1px solid var(--hair); }
+
+/* Staggered page-load reveal */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Marquee ticker */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee 26s linear infinite;
+}
+
+/* Zacht onderstreept accent bij hover */
+.link-underline {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 0% 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-underline:hover {
+  background-size: 100% 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; opacity: 1; }
+  .marquee-track { animation: none; }
+  html { scroll-behavior: auto; }
 }
