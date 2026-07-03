@@ -2,6 +2,7 @@ import { getSql } from '@/lib/db';
 import { PageHeader, Table, Th, Td, StatusBadge, EmptyState } from '../ui';
 import { formatDate, euro } from '@/lib/config';
 import { OrderControls } from './order-controls';
+import { DeleteOrderButton } from './delete-order-button';
 import type { Order } from '@/types/db';
 
 export const dynamic = 'force-dynamic';
@@ -24,6 +25,7 @@ export default async function OrdersPage() {
               <Th>Status</Th>
               <Th>Domein &amp; live</Th>
               <Th>Aangemaakt</Th>
+              <Th> </Th>
             </>
           }
         >
@@ -38,6 +40,9 @@ export default async function OrdersPage() {
                 <OrderControls id={o.id} status={o.status} domain={o.domain} />
               </Td>
               <Td>{formatDate(o.created_at)}</Td>
+              <Td>
+                <DeleteOrderButton id={o.id} label={o.customer_company ?? o.customer_email ?? 'deze klant'} />
+              </Td>
             </tr>
           ))}
         </Table>
