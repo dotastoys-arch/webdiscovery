@@ -26,10 +26,15 @@ export default async function PreviewPage({ params }: { params: Promise<{ slug: 
   const parsed = siteContentSchema.safeParse(site.content);
   if (!parsed.success) notFound();
 
+  // Al betaald? Dan geen "bestellen"-balk meer tonen.
+  const paidRows = await sql`
+    select 1 from orders where site_id = ${site.id} and status in ('paid','domain_setup','delivered') limit 1`;
+  const paid = !!paidRows[0];
+
   return (
     <>
       <ViewTracker slug={slug} />
-      <PreviewSite content={parsed.data} modules={(site.modules as ModuleId[]) ?? []} slug={slug} />
+      <PreviewSite content={parsed.data} modules={(site.modules as ModuleId[]) ?? []} slug={slug} live={paid} />
     </>
   );
 }

@@ -50,9 +50,11 @@ export async function createOrderForSite(siteId: string): Promise<{ orderId: str
   const s = rows[0];
   if (!s) throw new Error('Site niet gevonden');
 
-  // Bestaat er al een open bestelling voor deze site? Hergebruik die.
+  // Bestaat er al een bestelling voor deze site? Hergebruik die — ook als 'ie al
+  // betaald is, zodat de klant nooit twee keer kan betalen.
   const existing = await sql`
-    select id from orders where site_id = ${siteId} and status in ('pending','awaiting_payment') limit 1`;
+    select id from orders where site_id = ${siteId} and status <> 'cancelled'
+    order by created_at desc limit 1`;
   if (existing[0]) return { orderId: existing[0].id as string };
 
   const ins = await sql`

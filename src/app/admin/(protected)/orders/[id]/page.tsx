@@ -21,6 +21,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   if (!order) notFound();
 
   const bestelUrl = `${config.siteUrl}/bestel/${order.id}`;
+  const isPaid = ['paid', 'domain_setup', 'delivered'].includes(order.status);
 
   return (
     <div>
@@ -58,12 +59,14 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           )}
         </div>
 
-        {/* Betaallink om te delen met de klant */}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
-          <h2 className="text-lg font-bold">Betaallink</h2>
-          <p className="text-sm text-neutral-500 mt-0.5 mb-4">Stuur deze link naar de klant om te betalen (iDEAL via Mollie).</p>
-          <CopyField value={bestelUrl} />
-        </div>
+        {/* Betaallink om te delen met de klant — alleen zolang nog niet betaald */}
+        {!isPaid && (
+          <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+            <h2 className="text-lg font-bold">Betaallink</h2>
+            <p className="text-sm text-neutral-500 mt-0.5 mb-4">Stuur deze link naar de klant om te betalen (iDEAL via Mollie).</p>
+            <CopyField value={bestelUrl} />
+          </div>
+        )}
 
         {/* Domein koppelen & live zetten (3 stappen) */}
         <DomainSection siteId={order.site_id ?? ''} order={{ id: order.id, status: order.status, domain: order.domain }} canAutoRegister={hasVercel()} />
