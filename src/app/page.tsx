@@ -15,6 +15,7 @@ export default function Home() {
         <div className="mx-auto max-w-[1200px] px-6 h-16 flex items-center justify-between">
           <Logo />
           <nav className="hidden md:flex items-center gap-10 text-[13px] uppercase tracking-[0.14em]">
+            <Link href="/" className="link-underline">Home</Link>
             <a href="#werk" className="link-underline">Diensten</a>
             <Link href="/portfolio" className="link-underline">Portfolio</Link>
             <a href="#prijs" className="link-underline">Prijs</a>

@@ -7,6 +7,7 @@ export function SiteHeader() {
       <div className="mx-auto max-w-[1200px] px-6 h-16 flex items-center justify-between">
         <Logo />
         <nav className="flex items-center gap-8 text-[13px] uppercase tracking-[0.14em]">
+          <Link href="/" className="hidden sm:inline link-underline">Home</Link>
           <Link href="/#werk" className="hidden sm:inline link-underline">Diensten</Link>
           <Link href="/portfolio" className="hidden sm:inline link-underline">Portfolio</Link>
           <Link href="/#prijs" className="hidden sm:inline link-underline">Prijs</Link>
