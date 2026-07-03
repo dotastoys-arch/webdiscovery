@@ -2,8 +2,9 @@ import Link from 'next/link';
 import type { SiteContent } from '@/lib/generate/schema';
 import { MODULES, type ModuleId } from '@/lib/modules';
 
-// Rendert een gegenereerde concept-website in de kleur van de klant.
-export function PreviewSite({ content: c, modules, slug }: { content: SiteContent; modules: ModuleId[]; slug: string }) {
+// Rendert een gegenereerde website in de kleur van de klant.
+// In live-modus (op het klantdomein) verbergen we de WebDiscovery-concept-balk.
+export function PreviewSite({ content: c, modules, slug, live = false }: { content: SiteContent; modules: ModuleId[]; slug: string; live?: boolean }) {
   const accent = c.theme.accent || '#2563eb';
   const tint = accent + '14'; // ~8% opacity
   const navSections = [
@@ -16,15 +17,17 @@ export function PreviewSite({ content: c, modules, slug }: { content: SiteConten
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      {/* Concept-balk van WebDiscovery */}
-      <div className="bg-neutral-900 text-white text-sm">
-        <div className="mx-auto max-w-6xl px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
-          <span>✨ Concept gemaakt door <strong>WebDiscovery</strong> voor {c.brand.name}</span>
-          <Link href={`/bestel/start/${slug}`} className="rounded-full bg-white text-neutral-900 px-4 py-1.5 text-xs font-semibold hover:bg-neutral-100">
-            Deze website bestellen
-          </Link>
+      {/* Concept-balk van WebDiscovery — alleen in preview, niet op het live-domein */}
+      {!live && (
+        <div className="bg-neutral-900 text-white text-sm">
+          <div className="mx-auto max-w-6xl px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+            <span>✨ Concept gemaakt door <strong>WebDiscovery</strong> voor {c.brand.name}</span>
+            <Link href={`/bestel/start/${slug}`} className="rounded-full bg-white text-neutral-900 px-4 py-1.5 text-xs font-semibold hover:bg-neutral-100">
+              Deze website bestellen
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Nav */}
       <header className="sticky top-0 z-30 border-b border-neutral-100 bg-white/90 backdrop-blur">
@@ -228,12 +231,16 @@ export function PreviewSite({ content: c, modules, slug }: { content: SiteConten
         </section>
       )}
 
-      {/* WebDiscovery-footer */}
+      {/* Footer */}
       <footer className="bg-neutral-900 text-neutral-400 text-center text-xs py-8 px-6">
-        <p>
-          Dit is een concept-website gemaakt door WebDiscovery.{' '}
-          <Link href={`/bestel/start/${slug}`} className="text-white underline">Bestel deze website</Link>
-        </p>
+        {live ? (
+          <p>© {c.brand.name} · Website door WebDiscovery</p>
+        ) : (
+          <p>
+            Dit is een concept-website gemaakt door WebDiscovery.{' '}
+            <Link href={`/bestel/start/${slug}`} className="text-white underline">Bestel deze website</Link>
+          </p>
+        )}
       </footer>
     </div>
   );
