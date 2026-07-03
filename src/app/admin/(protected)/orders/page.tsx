@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getSql } from '@/lib/db';
 import { PageHeader, Table, Th, Td, StatusBadge, EmptyState } from '../ui';
 import { formatDate, euro } from '@/lib/config';
@@ -31,7 +32,11 @@ export default async function OrdersPage() {
         >
           {orders.map((o) => (
             <tr key={o.id}>
-              <Td>{o.customer_company ?? o.customer_email ?? '—'}</Td>
+              <Td>
+                <Link href={`/admin/orders/${o.id}`} className="font-medium text-indigo-600 hover:underline">
+                  {o.customer_company ?? o.customer_email ?? '—'}
+                </Link>
+              </Td>
               <Td>{euro(o.amount_cents)}</Td>
               <Td>
                 <StatusBadge status={o.status} />
