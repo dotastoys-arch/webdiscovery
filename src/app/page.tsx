@@ -16,7 +16,7 @@ export default function Home() {
           <Logo />
           <nav className="hidden md:flex items-center gap-10 text-[13px] uppercase tracking-[0.14em]">
             <a href="#werk" className="link-underline">Diensten</a>
-            <a href="#compleet" className="link-underline">Wat je krijgt</a>
+            <Link href="/portfolio" className="link-underline">Portfolio</Link>
             <a href="#prijs" className="link-underline">Prijs</a>
           </nav>
           <Link
@@ -139,7 +139,8 @@ export default function Home() {
               { t: 'Boekingssysteem', d: 'Online afspraken met automatische bevestiging.' },
               { t: 'Offertesysteem', d: 'Bezoekers vragen direct een offerte aan.' },
               { t: 'Webshop', d: 'Producten verkopen met veilige iDEAL-betaling.' },
-              { t: 'CMS', d: 'Teksten, foto’s en prijzen zelf aanpassen.' },
+              { t: 'Online betaalsysteem', d: 'Betalingen, inschrijvingen of contributie direct via iDEAL.' },
+              { t: 'Op maat gemaakt CMS', d: 'Een beheerpaneel op maat — alles zelf aanpassen.' },
               { t: 'Reserveringen & menu', d: 'Voor horeca: altijd actuele kaart.' },
               { t: 'Reviews & galerij', d: 'Toon je beste werk en beoordelingen.' },
             ].map((m, i) => (
@@ -200,45 +201,26 @@ export default function Home() {
                 aanmelden — verzorgd, snel en makkelijk zelf te beheren.
               </p>
               <div className="flex flex-wrap gap-2 mb-6">
-                {['Webdesign', 'CMS', 'Ledenportaal', 'Evenementen'].map((t) => (
+                {['Op maat CMS', 'Online betalen', 'Ledenportaal', 'Evenementen'].map((t) => (
                   <span key={t} className="text-xs rounded-full border border-[var(--hair)] px-3 py-1 text-[var(--ink)]/70">{t}</span>
                 ))}
               </div>
-              <a
-                href="https://sokvanneocat.nl"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline"
-              >
-                Bekijk de live site →
-              </a>
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                <a
+                  href="https://sokvanneocat.nl"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline"
+                >
+                  Bekijk de live site →
+                </a>
+                <Link href="/portfolio" className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline">
+                  Volledig portfolio →
+                </Link>
+              </div>
             </div>
           </div>
 
-          {/* Branche-voorbeelden (concepten) */}
-          <div className="mt-16">
-            <div className="flex items-baseline justify-between mb-6">
-              <h3 className="font-display text-2xl md:text-3xl">Voor elke branche een voorbeeld</h3>
-              <span className="text-[12px] uppercase tracking-[0.2em] text-[var(--ink-soft)]">Concepten</span>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { img: '/img/voorbeeld-restaurant.jpg', t: 'Restaurant' },
-                { img: '/img/voorbeeld-kapsalon.jpg', t: 'Kapsalon' },
-                { img: '/img/voorbeeld-aannemer.jpg', t: 'Aannemer' },
-              ].map((x) => (
-                <div key={x.t} className="rounded-2xl border border-[var(--hair)] overflow-hidden bg-white">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={x.img} alt={`Voorbeeldwebsite voor een ${x.t.toLowerCase()}`} className="w-full aspect-[16/10] object-cover" />
-                  <div className="px-5 py-3 flex items-center justify-between">
-                    <span className="font-medium">{x.t}</span>
-                    <span className="text-[11px] uppercase tracking-[0.14em] text-[var(--ink-soft)]">Voorbeeld</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-[var(--ink-soft)] mt-4">Voorbeelden van wat we voor jouw branche kunnen bouwen.</p>
-          </div>
         </div>
       </section>
 

@@ -8,6 +8,7 @@ export function SiteHeader() {
         <Logo />
         <nav className="flex items-center gap-8 text-[13px] uppercase tracking-[0.14em]">
           <Link href="/#werk" className="hidden sm:inline link-underline">Diensten</Link>
+          <Link href="/portfolio" className="hidden sm:inline link-underline">Portfolio</Link>
           <Link href="/#prijs" className="hidden sm:inline link-underline">Prijs</Link>
           <Link href="/contact" className="hidden sm:inline link-underline">Contact</Link>
           <Link
@@ -43,6 +44,7 @@ export function SiteFooter() {
             <div className="text-[12px] uppercase tracking-[0.2em] text-[var(--ink-soft)] mb-4">Menu</div>
             <ul className="space-y-2.5 text-sm">
               <li><Link href="/#werk" className="link-underline">Diensten</Link></li>
+              <li><Link href="/portfolio" className="link-underline">Portfolio</Link></li>
               <li><Link href="/#prijs" className="link-underline">Prijs</Link></li>
               <li><Link href="/offerte" className="link-underline">Offerte</Link></li>
             </ul>

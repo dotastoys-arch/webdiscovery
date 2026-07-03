@@ -10,6 +10,7 @@ export type ModuleId =
   | 'reservations'
   | 'quote'
   | 'webshop'
+  | 'payments'
   | 'gallery'
   | 'menu'
   | 'reviews'
@@ -26,8 +27,14 @@ export interface ModuleDef {
 export const MODULES: Record<ModuleId, ModuleDef> = {
   cms: {
     id: 'cms',
-    label: 'CMS',
-    description: 'Teksten, foto’s, prijzen en openingstijden zelf aanpassen — geen externe hulp nodig.',
+    label: 'Op maat gemaakt CMS',
+    description: 'Een beheerpaneel afgestemd op jouw bedrijf: teksten, foto’s, prijzen en meer zelf aanpassen — geen externe hulp nodig.',
+  },
+  payments: {
+    id: 'payments',
+    label: 'Online betaalsysteem',
+    description: 'Betalingen, inschrijvingen of contributie direct online via iDEAL.',
+    saasAlternatives: ['Mollie'],
   },
   contact: {
     id: 'contact',
