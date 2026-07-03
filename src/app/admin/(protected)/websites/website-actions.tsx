@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-export function WebsiteActions({ siteId, previewUrl }: { siteId: string; previewUrl: string | null }) {
+export function WebsiteActions({ siteId, previewUrl, paid = false }: { siteId: string; previewUrl: string | null; paid?: boolean }) {
   const [loading, setLoading] = useState(false);
   const [bestelUrl, setBestelUrl] = useState<string | null>(null);
 
@@ -26,7 +26,9 @@ export function WebsiteActions({ siteId, previewUrl }: { siteId: string; preview
         <a href={previewUrl} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">Preview ↗</a>
       )}
       <Link href={`/admin/websites/${siteId}`} className="text-neutral-600 hover:text-neutral-900">Bewerken</Link>
-      {bestelUrl ? (
+      {paid ? (
+        <span className="text-emerald-600 font-medium">Betaald ✓</span>
+      ) : bestelUrl ? (
         <a href={bestelUrl} target="_blank" rel="noreferrer" className="text-emerald-600 hover:underline" title={bestelUrl}>Betaallink ↗</a>
       ) : (
         <button onClick={makeLink} disabled={loading} className="text-neutral-600 hover:text-neutral-900 disabled:opacity-50">

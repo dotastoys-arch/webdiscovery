@@ -19,6 +19,12 @@ const ic = {
   check: 'M20 6 9 17l-5-5',
   star: 'M12 3l2.9 5.9 6.1.9-4.5 4.4 1 6.3L12 17.8 6.5 20.5l1-6.3L3 9.8l6.1-.9z',
   shield: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+  card: 'M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zM2 10h20',
+  clock: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2',
+  image: 'M3 5h18v14H3zM3 15l5-5 4 4 3-3 6 6',
+  phone: 'M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zM11 18h2',
+  sparkles: 'M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8zM19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9z',
+  tag: 'M20.6 13.4 12 22l-9-9V4h9zM7.5 7.5h.01',
 };
 
 export default function Home() {
@@ -173,18 +179,36 @@ export default function Home() {
             title: 'Alle tools die jouw branche nodig heeft',
             body: 'Boekingssysteem, offertesysteem, webshop, online betalen, menukaart, reviews — we stemmen de modules af op jouw branche. Eén website die écht werk uit handen neemt.',
             points: ['Boekingen & reserveringen', 'Offertes & online betalen', 'Webshop met iDEAL'],
+            cards: [
+              { icon: ic.calendar, t: 'Boekingen', s: 'Online reserveren' },
+              { icon: ic.doc, t: 'Offertes', s: 'Aanvraag op maat' },
+              { icon: ic.cart, t: 'Webshop', s: 'Verkoop direct' },
+              { icon: ic.card, t: 'Betalen', s: 'iDEAL & meer' },
+            ],
           },
           {
             tag: 'Zelf beheren', icon: ic.edit,
             title: 'Een CMS op maat — nooit meer externe hulp',
             body: 'Pas teksten, foto’s, prijzen en openingstijden zelf aan via een eenvoudig paneel. Jij houdt de regie, wij zorgen voor hosting en onderhoud.',
             points: ['Alles zelf aanpassen', 'Geen technische kennis nodig', 'Hosting & updates inbegrepen'],
+            cards: [
+              { icon: ic.edit, t: 'Teksten', s: 'Zelf aanpassen' },
+              { icon: ic.image, t: 'Foto’s', s: 'Uploaden' },
+              { icon: ic.tag, t: 'Prijzen', s: 'Bijwerken' },
+              { icon: ic.clock, t: 'Openingstijden', s: 'Instellen' },
+            ],
           },
           {
             tag: 'Vindbaar', icon: ic.search,
             title: 'Gevonden door mens én AI',
             body: 'Steeds meer mensen zoeken via AI in plaats van Google. Onze sites zijn zo opgebouwd dat AI-assistenten je begrijpen en aanbevelen — snel, mobiel en machine-leesbaar.',
             points: ['Bliksemsnel & mobielvriendelijk', 'Vindbaar in Google én AI', 'Klaar voor de toekomst'],
+            cards: [
+              { icon: ic.search, t: 'Google', s: 'Topposities' },
+              { icon: ic.sparkles, t: 'AI-zoek', s: 'Aanbevolen' },
+              { icon: ic.bolt, t: 'Snelheid', s: 'Bliksemsnel' },
+              { icon: ic.phone, t: 'Mobiel', s: 'Perfect op elk scherm' },
+            ],
           },
         ].map((f, idx) => (
           <div key={f.title} className={`grid md:grid-cols-2 gap-12 items-center ${idx % 2 ? 'md:[&>*:first-child]:order-2' : ''}`}>
@@ -205,11 +229,11 @@ export default function Home() {
             </div>
             <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-indigo-50/50 p-6 shadow-sm">
               <div className="grid grid-cols-2 gap-3">
-                {[0, 1, 2, 3].map((i) => (
-                  <div key={i} className="rounded-xl bg-white border border-slate-100 p-4 shadow-sm">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mb-3"><Icon path={f.icon} className="w-4 h-4" /></div>
-                    <div className="h-2 w-16 rounded bg-slate-200 mb-1.5" />
-                    <div className="h-2 w-10 rounded bg-slate-100" />
+                {f.cards.map((card) => (
+                  <div key={card.t} className="rounded-xl bg-white border border-slate-100 p-4 shadow-sm">
+                    <div className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mb-3"><Icon path={card.icon} className="w-4 h-4" /></div>
+                    <div className="text-sm font-semibold text-slate-800">{card.t}</div>
+                    <div className="text-xs text-slate-500 mt-0.5">{card.s}</div>
                   </div>
                 ))}
               </div>

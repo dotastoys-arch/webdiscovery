@@ -12,12 +12,14 @@ type Row = {
   view_count: number;
   updated_at: string;
   company_name: string | null;
+  paid: boolean;
 };
 
 export default async function WebsitesPage() {
   const sql = getSql();
   const rows = (await sql`
-    select gs.id, gs.status, gs.preview_url, gs.view_count, gs.updated_at, l.company_name
+    select gs.id, gs.status, gs.preview_url, gs.view_count, gs.updated_at, l.company_name,
+           exists(select 1 from orders o where o.site_id = gs.id and o.status in ('paid','domain_setup','delivered')) as paid
     from generated_sites gs left join leads l on l.id = gs.lead_id
     order by gs.updated_at desc limit 200
   `) as unknown as Row[];
@@ -48,7 +50,7 @@ export default async function WebsitesPage() {
               <Td><StatusBadge status={r.status} /></Td>
               <Td>{r.view_count > 0 ? `${r.view_count}×` : '—'}</Td>
               <Td>{formatDate(r.updated_at)}</Td>
-              <Td><WebsiteActions siteId={r.id} previewUrl={r.preview_url} /></Td>
+              <Td><WebsiteActions siteId={r.id} previewUrl={r.preview_url} paid={r.paid} /></Td>
             </tr>
           ))}
         </Table>
