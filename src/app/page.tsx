@@ -1,349 +1,306 @@
 import Link from 'next/link';
-import { SiteFooter } from '@/components/site-chrome';
-import { Logo } from '@/components/logo';
+import { LogoMark } from '@/components/logo';
 
-const tickerWords = [
-  'Webdesign', 'Rebranding', 'Boekingssystemen', 'Webshops', 'CMS',
-  'AI-vindbaarheid', 'Offertes', 'Hosting', 'Onderhoud',
-];
+function Icon({ path, className = 'w-5 h-5' }: { path: string; className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+      strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      {path.split('|').map((d, i) => <path key={i} d={d} />)}
+    </svg>
+  );
+}
+const ic = {
+  calendar: 'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
+  doc: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 13h6M9 17h6',
+  cart: 'M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 2 0 1 1 0 0 0-2 0M17 20a1 1 0 1 0 2 0 1 1 0 0 0-2 0',
+  edit: 'M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z',
+  search: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3',
+  bolt: 'M13 2 3 14h7l-1 8 10-12h-7z',
+  check: 'M20 6 9 17l-5-5',
+  star: 'M12 3l2.9 5.9 6.1.9-4.5 4.4 1 6.3L12 17.8 6.5 20.5l1-6.3L3 9.8l6.1-.9z',
+  shield: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+};
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
-      {/* ───────── Nav ───────── */}
-      <header className="sticky top-0 z-40 hair-b bg-[var(--paper)]/90 backdrop-blur-md">
-        <div className="mx-auto max-w-[1200px] px-6 h-16 flex items-center justify-between">
-          <Logo />
-          <nav className="hidden md:flex items-center gap-10 text-[13px] uppercase tracking-[0.14em]">
-            <Link href="/" className="link-underline">Home</Link>
-            <a href="#werk" className="link-underline">Diensten</a>
-            <Link href="/portfolio" className="link-underline">Portfolio</Link>
-            <a href="#prijs" className="link-underline">Prijs</a>
+    <div className="min-h-screen bg-white text-slate-900" style={{ fontFamily: 'var(--font-jakarta), sans-serif' }}>
+      {/* Nav */}
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg tracking-tight">
+            <span className="text-indigo-600"><LogoMark className="w-7 h-7" /></span>
+            WebDiscovery
+          </Link>
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+            <a href="#features" className="hover:text-slate-900">Wat je krijgt</a>
+            <Link href="/portfolio" className="hover:text-slate-900">Portfolio</Link>
+            <a href="#prijs" className="hover:text-slate-900">Prijs</a>
           </nav>
-          <Link
-            href="/offerte"
-            className="text-[13px] uppercase tracking-[0.14em] border border-[var(--ink)] px-5 py-2.5 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors"
-          >
-            Offerte
+          <Link href="/offerte" className="rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-indigo-600/20">
+            Gratis ontwerp
           </Link>
         </div>
       </header>
 
-      {/* ───────── Hero ───────── */}
-      <section className="mx-auto max-w-[1200px] px-6">
-        <div className="grid lg:grid-cols-12 gap-8 pt-20 pb-14">
-          <div className="lg:col-span-9">
-            <div className="reveal flex items-center gap-3 text-[12px] uppercase tracking-[0.2em] text-[var(--ink-soft)]" style={{ animationDelay: '0ms' }}>
-              <span className="w-8 h-px bg-[var(--accent)]" />
-              Erkend Nederlands webbureau · KvK
-            </div>
-            <h1 className="reveal font-display font-light leading-[0.92] tracking-[-0.02em] mt-6 text-[clamp(2.8rem,8.5vw,7rem)]" style={{ animationDelay: '90ms' }}>
-              Websites die
-              <br />
-              <span className="italic text-[var(--accent)]">verkopen</span> — gebouwd
-              <br />
-              voor het AI-tijdperk.
-            </h1>
-            <p className="reveal mt-8 max-w-xl text-lg leading-relaxed text-[var(--ink)]/80" style={{ animationDelay: '180ms' }}>
-              Een complete website mét de tools die jouw branche nodig heeft — boekingen,
-              offertes, webshop, CMS. Zó gebouwd dat je álles zelf beheert, en gevonden wordt
-              door mens én AI.
-            </p>
-            <div className="reveal mt-10 flex flex-wrap items-center gap-4" style={{ animationDelay: '270ms' }}>
-              <Link
-                href="/offerte"
-                className="group inline-flex items-center gap-3 bg-[var(--ink)] text-[var(--paper)] px-7 py-4 text-[13px] uppercase tracking-[0.14em] hover:bg-[var(--accent)] transition-colors"
-              >
-                Gratis ontwerp aanvragen
-                <span className="transition-transform group-hover:translate-x-1">→</span>
-              </Link>
-              <a href="#werk" className="text-[13px] uppercase tracking-[0.14em] link-underline py-4">
-                Bekijk het werk
-              </a>
-            </div>
-          </div>
-
-          {/* Editorial index-kolom */}
-          <div className="lg:col-span-3 lg:border-l border-[var(--hair)] lg:pl-8 flex flex-col justify-end reveal" style={{ animationDelay: '360ms' }}>
-            <div className="font-display text-6xl leading-none">€500</div>
-            <div className="mt-1 text-[13px] uppercase tracking-[0.14em] text-[var(--ink-soft)]">
-              introductieprijs
-            </div>
-            <p className="mt-4 text-sm text-[var(--ink)]/70 leading-relaxed">
-              Onze startprijs voor een compleet portfolio. Deze prijs gaat binnenkort omhoog.
-            </p>
-          </div>
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[520px] w-[900px] rounded-full bg-gradient-to-br from-indigo-200/60 via-violet-200/50 to-transparent blur-3xl" />
         </div>
-      </section>
-
-      {/* ───────── Hero-beeld ───────── */}
-      <section className="mx-auto max-w-[1200px] px-6 pb-12">
-        <div className="rounded-2xl overflow-hidden border border-[var(--hair)]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/img/hero.jpg" alt="" className="w-full h-[240px] md:h-[440px] object-cover" />
-        </div>
-      </section>
-
-      {/* ───────── Marquee ───────── */}
-      <div className="hair-t hair-b py-4 overflow-hidden">
-        <div className="marquee-track">
-          {[0, 1].map((dup) => (
-            <div key={dup} className="flex items-center" aria-hidden={dup === 1}>
-              {tickerWords.map((w) => (
-                <span key={w} className="flex items-center font-display text-2xl px-8">
-                  {w}
-                  <span className="ml-16 text-[var(--accent)]">✦</span>
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ───────── Diensten (editorial genummerd) ───────── */}
-      <section id="werk" className="mx-auto max-w-[1200px] px-6 py-24">
-        <div className="flex items-baseline justify-between mb-12">
-          <h2 className="font-display text-4xl md:text-5xl tracking-[-0.02em]">Wat we doen</h2>
-          <span className="text-[13px] uppercase tracking-[0.2em] text-[var(--ink-soft)]">01 — 03</span>
-        </div>
-        <div>
-          {[
-            { n: '01', t: 'Webdesign', d: 'Een strak, professioneel ontwerp dat past bij jouw bedrijf — snel, mobiel en gebouwd om te scoren.' },
-            { n: '02', t: 'Rebranding', d: 'Verouderde uitstraling? Wij vernieuwen je merk zodat je er weer modern en betrouwbaar uitziet.' },
-            { n: '03', t: 'AI-vindbaarheid', d: 'Technisch zo opgebouwd dat AI-assistenten je begrijpen en aanbevelen — klaar voor hoe mensen nú zoeken.' },
-          ].map((s) => (
-            <div key={s.n} className="group hair-t py-10 grid md:grid-cols-12 gap-6 items-baseline hover:bg-[var(--paper-2)] transition-colors -mx-6 px-6">
-              <div className="md:col-span-1 text-[13px] tracking-[0.2em] text-[var(--accent)]">{s.n}</div>
-              <h3 className="md:col-span-4 font-display text-3xl md:text-4xl group-hover:italic transition-all">{s.t}</h3>
-              <p className="md:col-span-6 md:col-start-7 text-[var(--ink)]/70 leading-relaxed">{s.d}</p>
-              <div className="md:col-span-1 text-right text-2xl opacity-0 group-hover:opacity-100 transition-opacity text-[var(--accent)]">→</div>
-            </div>
-          ))}
-          <div className="hair-t" />
-        </div>
-      </section>
-
-      {/* ───────── Compleet & zelf beheren ───────── */}
-      <section id="compleet" className="hair-t hair-b bg-[var(--paper-2)]">
-        <div className="mx-auto max-w-[1200px] px-6 py-24">
-          <div className="grid md:grid-cols-12 gap-8 mb-14">
-            <h2 className="md:col-span-7 font-display text-4xl md:text-5xl leading-[1.05] tracking-[-0.02em]">
-              Compleet — en volledig <span className="italic text-[var(--accent)]">in eigen beheer.</span>
-            </h2>
-            <p className="md:col-span-4 md:col-start-9 self-end text-[var(--ink)]/70 leading-relaxed">
-              Niet zomaar een website, maar alle tools die jouw branche nodig heeft. Dankzij het
-              ingebouwde CMS pas je alles zélf aan — nooit meer afhankelijk van een externe partij.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 border-l border-t border-[var(--hair)]">
-            {[
-              { t: 'Boekingssysteem', d: 'Online afspraken met automatische bevestiging.' },
-              { t: 'Offertesysteem', d: 'Bezoekers vragen direct een offerte aan.' },
-              { t: 'Webshop', d: 'Producten verkopen met veilige iDEAL-betaling.' },
-              { t: 'Online betaalsysteem', d: 'Betalingen, inschrijvingen of contributie direct via iDEAL.' },
-              { t: 'Op maat gemaakt CMS', d: 'Een beheerpaneel op maat — alles zelf aanpassen.' },
-              { t: 'Reserveringen & menu', d: 'Voor horeca: altijd actuele kaart.' },
-              { t: 'Reviews & galerij', d: 'Toon je beste werk en beoordelingen.' },
-            ].map((m, i) => (
-              <div key={m.t} className="border-r border-b border-[var(--hair)] p-8 hover:bg-[var(--paper)] transition-colors">
-                <div className="text-[13px] tracking-[0.2em] text-[var(--accent)] mb-4">
-                  {String(i + 1).padStart(2, '0')}
-                </div>
-                <h3 className="font-display text-2xl mb-2">{m.t}</h3>
-                <p className="text-sm text-[var(--ink)]/65 leading-relaxed">{m.d}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-8 text-sm text-[var(--ink-soft)]">
-            We stemmen de modules af op jouw branche — je betaalt alleen voor wat je nodig hebt.
+        <div className="mx-auto max-w-4xl px-6 pt-20 pb-10 text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-medium text-slate-600 shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+            Erkend Nederlands webbureau · gebouwd voor AI
+          </span>
+          <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
+            Zet je bedrijf online —{' '}
+            <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">compleet, in dagen.</span>
+          </h1>
+          <p className="mt-6 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Een complete website mét alle tools die jouw branche nodig heeft — boekingen, offertes,
+            webshop, CMS. Zelf te beheren en vindbaar door mens én AI. Vanaf €500,-.
           </p>
-        </div>
-      </section>
-
-      {/* ───────── Ons werk ───────── */}
-      <section id="portfolio" className="hair-t bg-[var(--paper-2)]">
-        <div className="mx-auto max-w-[1200px] px-6 py-24">
-          <div className="flex items-baseline justify-between mb-12">
-            <h2 className="font-display text-4xl md:text-5xl tracking-[-0.02em]">Ons werk</h2>
-            <span className="text-[13px] uppercase tracking-[0.2em] text-[var(--ink-soft)]">Live projecten</span>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/offerte" className="rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-7 py-3.5 text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-indigo-600/25">
+              Vraag een gratis ontwerp aan
+            </Link>
+            <Link href="/portfolio" className="rounded-full border border-slate-300 bg-white px-7 py-3.5 text-sm font-semibold hover:bg-slate-50 transition">
+              Bekijk voorbeelden
+            </Link>
           </div>
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-            {/* Browser-mockup van sokvanneocat.nl in hun eigen kleuren */}
-            <a
-              href="https://sokvanneocat.nl"
-              target="_blank"
-              rel="noreferrer"
-              className="group block rounded-2xl border border-[var(--hair)] bg-white shadow-xl overflow-hidden hover:-translate-y-1 transition-transform"
-            >
-              <div className="flex items-center gap-1.5 px-4 h-9 border-b border-neutral-200 bg-neutral-50">
+          <p className="mt-4 text-xs text-slate-400">Vrijblijvend · geen creditcard nodig</p>
+        </div>
+
+        {/* Product-mockup met zwevende kaarten */}
+        <div className="mx-auto max-w-4xl px-6 pb-20">
+          <div className="relative">
+            <div className="rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-indigo-900/10 overflow-hidden">
+              <div className="flex items-center gap-1.5 px-4 h-9 border-b border-slate-100 bg-slate-50">
                 <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                 <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                <span className="ml-3 text-[11px] text-neutral-400">sokvanneocat.nl</span>
+                <span className="ml-3 text-[11px] text-slate-400">jouwbedrijf.nl</span>
               </div>
-              <div className="p-8" style={{ background: 'linear-gradient(135deg,#16294d,#0f1d38)' }}>
-                <div className="text-[10px] uppercase tracking-[0.2em]" style={{ color: '#c9a25a' }}>
-                  Rasclub · opgericht 1980
+              <div className="p-6 bg-white">
+                <div className="h-32 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 mb-4 flex items-center px-6">
+                  <div className="space-y-2">
+                    <div className="h-3 w-40 rounded bg-white/80" />
+                    <div className="h-2.5 w-28 rounded bg-white/50" />
+                    <div className="h-6 w-24 rounded-lg bg-white/90 mt-2" />
+                  </div>
                 </div>
-                <div className="mt-3 text-white text-2xl leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
-                  Rasclub voor Siamezen &amp; Oosterse Korthaar
-                </div>
-                <div className="mt-6 inline-block text-xs font-semibold px-4 py-2 rounded" style={{ background: '#c9a25a', color: '#16294d' }}>
-                  Word lid
+                <div className="grid grid-cols-3 gap-3">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="h-20 rounded-lg bg-slate-100" />
+                  ))}
                 </div>
               </div>
-            </a>
-            {/* Beschrijving */}
+            </div>
+            {/* Zwevende kaarten */}
+            <div className="hidden sm:flex absolute -top-5 -left-5 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 shadow-xl">
+              <span className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"><Icon path={ic.calendar} className="w-4 h-4" /></span>
+              <span className="text-xs font-semibold">Boekingssysteem</span>
+            </div>
+            <div className="hidden sm:flex absolute -bottom-5 -right-5 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 shadow-xl">
+              <span className="text-amber-400"><Icon path={ic.star} className="w-4 h-4 fill-amber-400" /></span>
+              <span className="text-xs font-semibold">5.0 · echte reviews</span>
+            </div>
+            <div className="hidden md:flex absolute top-1/2 -right-8 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 shadow-xl">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-semibold">Live · zelf te beheren</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Logo cloud */}
+      <section className="border-y border-slate-100 bg-slate-50/60">
+        <div className="mx-auto max-w-6xl px-6 py-10">
+          <p className="text-center text-xs font-semibold uppercase tracking-widest text-slate-400 mb-6">Wij werken samen met</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4 text-lg font-bold text-slate-400">
+            {['Mollie', 'Cal.com', 'Google', 'WhatsApp', 'Shopify'].map((p) => <span key={p}>{p}</span>)}
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section id="features" className="mx-auto max-w-6xl px-6 py-24 space-y-24">
+        {[
+          {
+            tag: 'Compleet', icon: ic.cart,
+            title: 'Alle tools die jouw branche nodig heeft',
+            body: 'Boekingssysteem, offertesysteem, webshop, online betalen, menukaart, reviews — we stemmen de modules af op jouw branche. Eén website die écht werk uit handen neemt.',
+            points: ['Boekingen & reserveringen', 'Offertes & online betalen', 'Webshop met iDEAL'],
+          },
+          {
+            tag: 'Zelf beheren', icon: ic.edit,
+            title: 'Een CMS op maat — nooit meer externe hulp',
+            body: 'Pas teksten, foto’s, prijzen en openingstijden zelf aan via een eenvoudig paneel. Jij houdt de regie, wij zorgen voor hosting en onderhoud.',
+            points: ['Alles zelf aanpassen', 'Geen technische kennis nodig', 'Hosting & updates inbegrepen'],
+          },
+          {
+            tag: 'Vindbaar', icon: ic.search,
+            title: 'Gevonden door mens én AI',
+            body: 'Steeds meer mensen zoeken via AI in plaats van Google. Onze sites zijn zo opgebouwd dat AI-assistenten je begrijpen en aanbevelen — snel, mobiel en machine-leesbaar.',
+            points: ['Bliksemsnel & mobielvriendelijk', 'Vindbaar in Google én AI', 'Klaar voor de toekomst'],
+          },
+        ].map((f, idx) => (
+          <div key={f.title} className={`grid md:grid-cols-2 gap-12 items-center ${idx % 2 ? 'md:[&>*:first-child]:order-2' : ''}`}>
             <div>
-              <h3 className="font-display text-3xl mb-3">SOK van Neocat</h3>
-              <p className="text-[var(--ink)]/70 leading-relaxed mb-5">
-                Een moderne website voor een landelijke rasvereniging voor Siamese en Oosterse
-                Korthaar katten. Met ledeninformatie, een kennisbank, evenementen en online
-                aanmelden — verzorgd, snel en makkelijk zelf te beheren.
-              </p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {['Op maat CMS', 'Online betalen', 'Ledenportaal', 'Evenementen'].map((t) => (
-                  <span key={t} className="text-xs rounded-full border border-[var(--hair)] px-3 py-1 text-[var(--ink)]/70">{t}</span>
+              <span className="inline-flex items-center gap-2 rounded-full bg-indigo-50 text-indigo-600 px-3 py-1 text-xs font-semibold">
+                <Icon path={f.icon} className="w-4 h-4" /> {f.tag}
+              </span>
+              <h2 className="mt-4 text-3xl md:text-4xl font-extrabold tracking-tight">{f.title}</h2>
+              <p className="mt-4 text-slate-600 leading-relaxed">{f.body}</p>
+              <ul className="mt-6 space-y-3">
+                {f.points.map((p) => (
+                  <li key={p} className="flex items-center gap-3 text-sm font-medium text-slate-700">
+                    <span className="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0"><Icon path={ic.check} className="w-3 h-3" /></span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-indigo-50/50 p-6 shadow-sm">
+              <div className="grid grid-cols-2 gap-3">
+                {[0, 1, 2, 3].map((i) => (
+                  <div key={i} className="rounded-xl bg-white border border-slate-100 p-4 shadow-sm">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mb-3"><Icon path={f.icon} className="w-4 h-4" /></div>
+                    <div className="h-2 w-16 rounded bg-slate-200 mb-1.5" />
+                    <div className="h-2 w-10 rounded bg-slate-100" />
+                  </div>
                 ))}
               </div>
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-                <a
-                  href="https://sokvanneocat.nl"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline"
-                >
-                  Bekijk de live site →
-                </a>
-                <Link href="/portfolio" className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline">
-                  Volledig portfolio →
-                </Link>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* Prijs */}
+      <section id="prijs" className="mx-auto max-w-6xl px-6 py-20">
+        <div className="mx-auto max-w-lg rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-600 p-1 shadow-2xl shadow-indigo-600/30">
+          <div className="rounded-[calc(1.5rem-4px)] bg-white p-8">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold text-slate-500">Complete website, live gezet</span>
+              <span className="rounded-full bg-amber-100 text-amber-700 px-3 py-1 text-xs font-semibold">Introductieprijs</span>
+            </div>
+            <div className="mt-3 flex items-end gap-2">
+              <span className="text-5xl font-extrabold tracking-tight">€500</span>
+              <span className="text-slate-500 mb-1.5">eenmalig</span>
+            </div>
+            <div className="mt-3 rounded-xl bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-800">
+              <strong>Let op:</strong> introductieprijs — deze gaat in de toekomst omhoog. Stap nu in.
+            </div>
+            <div className="mt-5 pt-5 border-t border-slate-100">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-2xl font-bold">vanaf €15</span><span className="text-slate-500 text-sm">/mnd</span>
               </div>
+              <p className="text-sm text-slate-500 mt-0.5">hosting, CMS, boekingssysteem &amp; onderhoud — volledig ontzorgd</p>
             </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ───────── AI pull-quote ───────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-28">
-        <div className="grid md:grid-cols-12 gap-8">
-          <div className="md:col-span-2 text-[13px] uppercase tracking-[0.2em] text-[var(--ink-soft)] pt-4">
-            Klaar voor de toekomst
-          </div>
-          <blockquote className="md:col-span-10 font-display text-3xl md:text-[2.8rem] leading-[1.15] tracking-[-0.01em]">
-            <span className="text-[var(--accent)]">“</span>Welke bakker in de buurt heeft goede
-            reviews?<span className="text-[var(--accent)]">”</span>
-            <span className="block mt-6 text-xl md:text-2xl text-[var(--ink)]/60 font-sans not-italic tracking-normal leading-relaxed">
-              Dít is hoe mensen nú zoeken — via AI, niet via tien blauwe links. Wij zorgen dat jouw
-              bedrijf het antwoord ís.
-            </span>
-          </blockquote>
-        </div>
-      </section>
-
-      {/* ───────── Prijs ───────── */}
-      <section id="prijs" className="hair-t bg-[var(--ink)] text-[var(--paper)]">
-        <div className="mx-auto max-w-[1200px] px-6 py-24 grid md:grid-cols-12 gap-10 items-center">
-          <div className="md:col-span-5">
-            <div className="inline-block text-[12px] uppercase tracking-[0.2em] text-[var(--accent)] border border-[var(--accent)] px-3 py-1">
-              Introductieprijs
-            </div>
-            <div className="mt-6 font-display text-[clamp(4rem,14vw,9rem)] leading-none">€500</div>
-            <div className="text-[13px] uppercase tracking-[0.14em] text-[var(--paper)]/60 mt-2">
-              eenmalig · complete website, live gezet
-            </div>
-            <p className="mt-6 text-[var(--paper)]/80 leading-relaxed border-l-2 border-[var(--accent)] pl-4">
-              Let op: dit is onze introductieprijs. De prijs gaat in de toekomst omhoog —
-              stap nu in en profiteer.
-            </p>
-          </div>
-          <div className="md:col-span-6 md:col-start-7">
-            <div className="flex items-baseline gap-2 font-display">
-              <span className="text-4xl">vanaf €15</span>
-              <span className="text-[var(--paper)]/50 text-lg">/mnd</span>
-            </div>
-            <p className="text-[var(--paper)]/50 text-sm mt-1">hosting, CMS, boekingssysteem &amp; onderhoud</p>
-            <p className="mt-5 text-[var(--paper)]/90 leading-relaxed border-l-2 border-[var(--accent)] pl-4">
-              <strong>Geen omkijken.</strong> Wij ontzorgen álles — hosting, updates, back-ups,
-              beveiliging en onderhoud. Jij runt je bedrijf, wij houden je website in topvorm.
-            </p>
-            <ul className="mt-8 divide-y divide-white/10">
+            <ul className="mt-6 space-y-2.5">
               {['Compleet ontwerp op maat', 'Branche-tools inbegrepen', 'Zelf te beheren via CMS', 'Vindbaar in Google én AI'].map((t) => (
-                <li key={t} className="py-3.5 flex items-center gap-3 text-[var(--paper)]/90">
-                  <span className="text-[var(--accent)]">✦</span> {t}
+                <li key={t} className="flex items-center gap-2.5 text-sm text-slate-700">
+                  <Icon path={ic.check} className="w-4 h-4 text-indigo-600 shrink-0" /> {t}
                 </li>
               ))}
             </ul>
-            <Link
-              href="/offerte"
-              className="mt-8 inline-flex items-center gap-3 bg-[var(--accent)] text-[var(--paper)] px-7 py-4 text-[13px] uppercase tracking-[0.14em] hover:bg-[var(--paper)] hover:text-[var(--ink)] transition-colors"
-            >
-              Vraag een gratis ontwerp aan →
+            <Link href="/offerte" className="mt-7 block text-center rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition">
+              Vraag een gratis ontwerp aan
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ───────── Geen verrassingen ───────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-20">
-        <div className="rounded-2xl border border-[var(--hair)] bg-[var(--paper-2)] px-8 py-12">
-          <div className="text-center max-w-xl mx-auto mb-10">
-            <h2 className="font-display text-3xl md:text-4xl tracking-[-0.02em]">
-              Alles inbegrepen. <span className="italic text-[var(--accent)]">Geen verrassingen.</span>
-            </h2>
-            <p className="mt-3 text-[var(--ink)]/70">Wat je ziet, is wat je krijgt — één heldere prijs, verder niets.</p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      {/* Geen verrassingen */}
+      <section className="mx-auto max-w-6xl px-6 pb-20">
+        <div className="rounded-3xl bg-slate-50 border border-slate-100 px-8 py-12">
+          <h2 className="text-center text-2xl md:text-3xl font-extrabold tracking-tight">Alles inbegrepen. Geen verrassingen.</h2>
+          <p className="text-center text-slate-500 mt-2">Wat je ziet, is wat je krijgt — één heldere prijs.</p>
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { t: 'Geen addertjes', d: 'Geen kleine lettertjes of verborgen voorwaarden.' },
-              { t: 'Geen add-ons', d: 'Geen losse modules die je alsnog moet bijkopen.' },
-              { t: 'Geen plugins', d: 'Geen extra software om zelf te installeren of bij te houden.' },
-              { t: 'Geen extra kosten', d: 'Geen verrassingen op de rekening — vooraf duidelijk.' },
+              { t: 'Geen add-ons', d: 'Geen losse modules die je moet bijkopen.' },
+              { t: 'Geen plugins', d: 'Geen extra software om zelf te beheren.' },
+              { t: 'Geen extra kosten', d: 'Vooraf duidelijk — geen verrassingen.' },
             ].map((x) => (
               <div key={x.t} className="text-center">
-                <div className="mx-auto w-10 h-10 rounded-full border border-[var(--accent)] flex items-center justify-center text-[var(--accent)] mb-3 text-lg">✕</div>
+                <div className="mx-auto w-10 h-10 rounded-full border-2 border-indigo-500 text-indigo-500 flex items-center justify-center mb-3 font-bold">✕</div>
                 <div className="font-semibold">{x.t}</div>
-                <p className="text-sm text-[var(--ink)]/60 mt-1">{x.d}</p>
+                <p className="text-sm text-slate-500 mt-1">{x.d}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ───────── Partners ───────── */}
-      <section className="hair-b">
-        <div className="mx-auto max-w-[1200px] px-6 py-12">
-          <p className="text-center text-[12px] uppercase tracking-[0.25em] text-[var(--ink-soft)] mb-8">
-            Wij werken samen met
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-14 gap-y-5">
-            {['Mollie', 'Cal.com', 'Google', 'WhatsApp', 'Shopify'].map((p) => (
-              <span key={p} className="font-display text-2xl text-[var(--ink)]/45">{p}</span>
-            ))}
+      {/* Portfolio teaser */}
+      <section className="mx-auto max-w-6xl px-6 pb-24">
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          <a href="https://sokvanneocat.nl" target="_blank" rel="noreferrer" className="group block rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden hover:-translate-y-1 transition">
+            <div className="flex items-center gap-1.5 px-4 h-9 border-b border-slate-100 bg-slate-50">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-400" /><span className="w-2.5 h-2.5 rounded-full bg-amber-400" /><span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+              <span className="ml-3 text-[11px] text-slate-400">sokvanneocat.nl</span>
+            </div>
+            <div className="p-8" style={{ background: 'linear-gradient(135deg,#16294d,#0f1d38)' }}>
+              <div className="text-[10px] uppercase tracking-[0.2em]" style={{ color: '#c9a25a' }}>Rasclub · opgericht 1980</div>
+              <div className="mt-3 text-white text-2xl leading-tight" style={{ fontFamily: 'Georgia, serif' }}>Rasclub voor Siamezen &amp; Oosterse Korthaar</div>
+              <div className="mt-6 inline-block text-xs font-semibold px-4 py-2 rounded" style={{ background: '#c9a25a', color: '#16294d' }}>Word lid</div>
+            </div>
+          </a>
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-indigo-50 text-indigo-600 px-3 py-1 text-xs font-semibold">Ons werk</span>
+            <h2 className="mt-4 text-3xl md:text-4xl font-extrabold tracking-tight">SOK van Neocat</h2>
+            <p className="mt-4 text-slate-600 leading-relaxed">Een complete website voor een landelijke rasvereniging — met ledenportaal, online betalen, kennisbank en een CMS op maat. Alles zelf te beheren.</p>
+            <Link href="/portfolio" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700">Bekijk het volledige portfolio →</Link>
           </div>
         </div>
       </section>
 
-      {/* ───────── CTA-band ───────── */}
-      <section className="mx-auto max-w-[1200px] px-6 py-24 text-center">
-        <h2 className="font-display text-[clamp(2.5rem,7vw,5rem)] leading-[0.95] tracking-[-0.02em]">
-          Klaar voor een website
-          <br />
-          die <span className="italic text-[var(--accent)]">écht</span> werkt?
-        </h2>
-        <p className="mt-6 text-[var(--ink)]/70 max-w-lg mx-auto">
-          Vraag vrijblijvend een ontwerp aan. Je ziet precies wat je krijgt — nog vóór je iets betaalt.
-        </p>
-        <Link
-          href="/offerte"
-          className="mt-10 inline-flex items-center gap-3 bg-[var(--ink)] text-[var(--paper)] px-8 py-4 text-[13px] uppercase tracking-[0.14em] hover:bg-[var(--accent)] transition-colors"
-        >
-          Start vandaag →
-        </Link>
+      {/* CTA-band */}
+      <section className="mx-auto max-w-6xl px-6 pb-20">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-600 px-8 py-16 text-center text-white">
+          <div className="pointer-events-none absolute -top-16 -right-10 h-64 w-64 rounded-full bg-white/10 blur-2xl" />
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">Klaar voor een website die werkt?</h2>
+          <p className="mt-3 text-indigo-100 max-w-xl mx-auto">Vraag vrijblijvend een ontwerp aan — je ziet precies wat je krijgt, nog vóór je iets betaalt.</p>
+          <Link href="/offerte" className="mt-8 inline-block rounded-full bg-white text-indigo-600 px-8 py-3.5 text-sm font-semibold hover:bg-indigo-50 transition shadow-lg">Start vandaag</Link>
+        </div>
       </section>
 
-      <SiteFooter />
+      {/* Footer */}
+      <footer className="border-t border-slate-100">
+        <div className="mx-auto max-w-6xl px-6 py-12">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+            <div className="max-w-xs">
+              <div className="flex items-center gap-2 font-bold text-lg">
+                <span className="text-indigo-600"><LogoMark className="w-6 h-6" /></span> WebDiscovery
+              </div>
+              <p className="mt-2 text-sm text-slate-500 leading-relaxed">Complete websites, gebouwd voor het AI-tijdperk. Erkend Nederlands webbureau.</p>
+            </div>
+            <div className="flex gap-12 text-sm">
+              <div>
+                <div className="font-semibold mb-3">Menu</div>
+                <ul className="space-y-2 text-slate-500">
+                  <li><a href="#features" className="hover:text-slate-900">Wat je krijgt</a></li>
+                  <li><Link href="/portfolio" className="hover:text-slate-900">Portfolio</Link></li>
+                  <li><Link href="/offerte" className="hover:text-slate-900">Offerte</Link></li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-semibold mb-3">Juridisch</div>
+                <ul className="space-y-2 text-slate-500">
+                  <li><Link href="/contact" className="hover:text-slate-900">Contact</Link></li>
+                  <li><Link href="/privacy" className="hover:text-slate-900">Privacy</Link></li>
+                  <li><Link href="/voorwaarden" className="hover:text-slate-900">Voorwaarden</Link></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="mt-10 pt-6 border-t border-slate-100 flex flex-col sm:flex-row justify-between gap-2 text-xs text-slate-400">
+            <span>© {new Date().getFullYear()} WebDiscovery · Wassenaar, NL</span>
+            <span>KvK 96004177 · BTW NL005189518B08</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

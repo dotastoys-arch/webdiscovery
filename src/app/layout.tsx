@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Hanken_Grotesk } from "next/font/google";
+import { Fraunces, Hanken_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 // Display: karaktervolle "old style" serif met soft/wonky settings.
@@ -13,6 +13,12 @@ const display = Fraunces({
 // Body: strakke, moderne grotesk.
 const body = Hanken_Grotesk({
   variable: "--font-body",
+  subsets: ["latin"],
+});
+
+// Modern sans voor de SaaS-homepage.
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
 });
 
@@ -30,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="nl"
-      className={`${display.variable} ${body.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} ${jakarta.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
