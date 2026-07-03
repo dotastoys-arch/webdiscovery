@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getSql } from '@/lib/db';
+import { hasVercel } from '@/lib/vercel';
 import { siteContentSchema } from '@/lib/generate/schema';
 import { PageHeader } from '../../ui';
 import { EditForm } from './edit-form';
@@ -56,7 +57,7 @@ export default async function EditWebsitePage({ params }: { params: Promise<{ id
         </section>
 
         <section>
-          <DomainSection siteId={id} order={order} />
+          <DomainSection siteId={id} order={order} canAutoRegister={hasVercel()} />
         </section>
       </div>
     </div>

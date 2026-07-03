@@ -4,24 +4,68 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 type OrderInfo = { id: string; status: string; domain: string | null } | null;
+type CheckResult = { domain: string; available: boolean; priceCents: number | null; years: number };
 
 const PAID = ['paid', 'domain_setup', 'delivered'];
 
-export function DomainSection({ siteId, order }: { siteId: string; order: OrderInfo }) {
+function euro(cents: number) {
+  return `€ ${(cents / 100).toFixed(2).replace('.', ',')}`;
+}
+
+export function DomainSection({
+  siteId,
+  order,
+  canAutoRegister = false,
+}: {
+  siteId: string;
+  order: OrderInfo;
+  canAutoRegister?: boolean;
+}) {
   const router = useRouter();
   const [dom, setDom] = useState(order?.domain ?? '');
   const [busy, setBusy] = useState(false);
+  const [check, setCheck] = useState<CheckResult | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
 
   async function post(url: string, body: object) {
     setBusy(true);
+    setMsg(null);
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(body),
     });
+    const json = await res.json().catch(() => ({}));
     setBusy(false);
-    if (res.ok) router.refresh();
-    else alert('Mislukt — probeer opnieuw.');
+    if (res.ok) {
+      router.refresh();
+      return json;
+    }
+    setMsg(json.error ?? 'Mislukt — probeer opnieuw.');
+    return null;
+  }
+
+  async function runCheck() {
+    setBusy(true);
+    setMsg(null);
+    setCheck(null);
+    const res = await fetch('/api/admin/domain/check', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ domain: dom }),
+    });
+    const json = await res.json().catch(() => ({}));
+    setBusy(false);
+    if (res.ok) setCheck(json as CheckResult);
+    else setMsg(json.error ?? 'Controle mislukt.');
+  }
+
+  async function registerAndGoLive() {
+    await post('/api/admin/domain/register', {
+      orderId: order!.id,
+      domain: dom,
+      confirmedPriceCents: check?.priceCents ?? undefined,
+    });
   }
 
   const status = order?.status;
@@ -65,9 +109,66 @@ export function DomainSection({ siteId, order }: { siteId: string; order: OrderI
         <div className="rounded-xl bg-emerald-50 border border-emerald-100 p-4 text-sm text-emerald-800">
           <strong>Website staat live</strong>{dom ? ` op ${dom}` : ''}. 🎉
         </div>
+      ) : canAutoRegister ? (
+        /* Automatische flow via Vercel: check → prijs → bevestigen → kopen & live */
+        <div className="space-y-4">
+          <div>
+            <label className={label}>Domeinnaam van de klant</label>
+            <div className="flex gap-2">
+              <input
+                value={dom}
+                onChange={(e) => { setDom(e.target.value); setCheck(null); }}
+                placeholder="bijv. salonbelle.nl"
+                className={input}
+              />
+              <button
+                onClick={runCheck}
+                disabled={busy || !dom}
+                className="shrink-0 rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium hover:bg-neutral-800 disabled:opacity-40"
+              >
+                {busy ? '…' : 'Controleer'}
+              </button>
+            </div>
+          </div>
+
+          {check && check.available && check.priceCents != null && (
+            <div className="rounded-xl bg-indigo-50 border border-indigo-100 p-4">
+              <p className="text-sm text-indigo-900">
+                <strong>{check.domain}</strong> is beschikbaar — <strong>{euro(check.priceCents)}</strong>
+                {check.years > 1 ? ` voor ${check.years} jaar` : ' per jaar'}.
+              </p>
+              <p className="text-xs text-indigo-700/80 mt-1">Dit bedrag wordt van je Vercel-account afgeschreven.</p>
+              <button
+                onClick={registerAndGoLive}
+                disabled={busy}
+                className="mt-3 rounded-lg bg-emerald-600 text-white px-5 py-2.5 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-50"
+              >
+                {busy ? 'Bezig…' : `Registreer & zet live · ${euro(check.priceCents)}`}
+              </button>
+            </div>
+          )}
+
+          {check && !check.available && (
+            <div className="rounded-xl bg-amber-50 border border-amber-100 p-4">
+              <p className="text-sm text-amber-800">
+                <strong>{check.domain}</strong> is niet beschikbaar om te kopen — mogelijk heeft de klant het al.
+              </p>
+              <button
+                onClick={registerAndGoLive}
+                disabled={busy}
+                className="mt-3 rounded-lg bg-emerald-600 text-white px-5 py-2.5 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-50"
+              >
+                {busy ? 'Bezig…' : 'Koppel bestaand domein & zet live'}
+              </button>
+              <p className="mt-2 text-xs text-amber-700">Laat de klant de DNS naar Vercel wijzen als het domein elders staat.</p>
+            </div>
+          )}
+
+          {msg && <p className="text-sm text-red-600">{msg}</p>}
+        </div>
       ) : (
+        /* Handmatige flow (geen Vercel-koppeling): status bijhouden */
         <div className="space-y-5">
-          {/* Stap 2: domein koppelen */}
           <div>
             <label className={label}>Stap 2 — Domeinnaam invullen</label>
             <div className="flex gap-2">
@@ -85,7 +186,6 @@ export function DomainSection({ siteId, order }: { siteId: string; order: OrderI
             </p>
           </div>
 
-          {/* Stap 3: live zetten */}
           <div className="border-t border-neutral-100 pt-5">
             <label className={label}>Stap 3 — Website online zetten</label>
             <button
@@ -97,6 +197,7 @@ export function DomainSection({ siteId, order }: { siteId: string; order: OrderI
             </button>
             {!coupled && <p className="mt-1.5 text-xs text-neutral-400">Koppel eerst een domein (stap 2).</p>}
           </div>
+          {msg && <p className="text-sm text-red-600">{msg}</p>}
         </div>
       )}
     </div>

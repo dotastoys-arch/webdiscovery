@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getSql } from '@/lib/db';
+import { hasVercel } from '@/lib/vercel';
 import { config, euro, formatDate } from '@/lib/config';
 import { PageHeader, StatusBadge } from '../../ui';
 import { DomainSection } from '../../websites/[id]/domain-section';
@@ -65,7 +66,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         </div>
 
         {/* Domein koppelen & live zetten (3 stappen) */}
-        <DomainSection siteId={order.site_id ?? ''} order={{ id: order.id, status: order.status, domain: order.domain }} />
+        <DomainSection siteId={order.site_id ?? ''} order={{ id: order.id, status: order.status, domain: order.domain }} canAutoRegister={hasVercel()} />
       </div>
     </div>
   );
