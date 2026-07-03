@@ -2,6 +2,7 @@ import { getSql } from '@/lib/db';
 import { PageHeader, Table, Th, Td, StatusBadge, EmptyState } from '../ui';
 import { formatDate } from '@/lib/config';
 import { OutreachButton } from './outreach-button';
+import { TemplateEditor } from './template-editor';
 import type { Campaign, EmailTemplate } from '@/types/db';
 
 export const dynamic = 'force-dynamic';
@@ -46,29 +47,16 @@ export default async function CampaignsPage() {
         </Table>
       )}
 
-      <h2 className="text-sm font-medium text-neutral-500 mb-3 mt-8">Mail-sjablonen</h2>
+      <h2 className="text-sm font-medium text-neutral-500 mb-1 mt-8">Mail-sjablonen</h2>
+      <p className="text-xs text-neutral-400 mb-3">Klik op een sjabloon om het onderwerp en de tekst te bewerken.</p>
       {templates.length === 0 ? (
         <EmptyState>Geen sjablonen gevonden — draai de database-setup (setup.sql).</EmptyState>
       ) : (
-        <Table
-          head={
-            <>
-              <Th>Stap</Th>
-              <Th>Naam</Th>
-              <Th>Onderwerp</Th>
-              <Th>Actief</Th>
-            </>
-          }
-        >
+        <div className="space-y-3">
           {templates.map((t) => (
-            <tr key={t.id}>
-              <Td>{t.step}</Td>
-              <Td>{t.name}</Td>
-              <Td>{t.subject}</Td>
-              <Td>{t.is_active ? 'ja' : 'nee'}</Td>
-            </tr>
+            <TemplateEditor key={t.id} template={t} />
           ))}
-        </Table>
+        </div>
       )}
     </div>
   );

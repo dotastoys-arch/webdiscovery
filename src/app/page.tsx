@@ -87,16 +87,28 @@ export default function Home() {
                 <span className="ml-3 text-[11px] text-slate-400">jouwbedrijf.nl</span>
               </div>
               <div className="p-6 bg-white">
-                <div className="h-32 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 mb-4 flex items-center px-6">
-                  <div className="space-y-2">
-                    <div className="h-3 w-40 rounded bg-white/80" />
-                    <div className="h-2.5 w-28 rounded bg-white/50" />
-                    <div className="h-6 w-24 rounded-lg bg-white/90 mt-2" />
+                <div className="relative h-36 rounded-xl overflow-hidden mb-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/img/voorbeeld-kapsalon.jpg" alt="" className="absolute inset-0 w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-700/85 to-violet-600/60" />
+                  <div className="relative h-full flex flex-col justify-center px-6 text-white">
+                    <span className="text-[11px] font-semibold uppercase tracking-widest text-white/80">Kapsalon · Wassenaar</span>
+                    <span className="text-xl font-extrabold leading-tight">Salon Belle</span>
+                    <span className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-lg bg-white text-indigo-700 px-3 py-1.5 text-xs font-bold">
+                      <Icon path={ic.calendar} className="w-3.5 h-3.5" /> Boek online
+                    </span>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
-                  {[0, 1, 2].map((i) => (
-                    <div key={i} className="h-20 rounded-lg bg-slate-100" />
+                <div className="grid grid-cols-3 gap-3 text-left">
+                  {[
+                    { t: 'Openingstijden', d: 'Ma–za · 09–18u' },
+                    { t: 'Knippen & kleuren', d: 'vanaf € 27,50' },
+                    { t: 'Reviews', d: '★ 5.0 · 132 klanten' },
+                  ].map((c) => (
+                    <div key={c.t} className="rounded-lg bg-slate-50 border border-slate-100 px-3 py-3">
+                      <div className="text-[11px] font-semibold text-slate-800">{c.t}</div>
+                      <div className="mt-1 text-[11px] text-slate-500">{c.d}</div>
+                    </div>
                   ))}
                 </div>
               </div>
