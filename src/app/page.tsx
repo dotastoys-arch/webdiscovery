@@ -235,9 +235,9 @@ export default function Home() {
             </div>
             <div className="mt-5 pt-5 border-t border-slate-100">
               <div className="flex items-baseline gap-1.5">
-                <span className="text-2xl font-bold">vanaf €15</span><span className="text-slate-500 text-sm">/mnd</span>
+                <span className="text-2xl font-bold">€15</span><span className="text-slate-500 text-sm">/mnd</span>
               </div>
-              <p className="text-sm text-slate-500 mt-0.5">hosting, CMS, boekingssysteem &amp; onderhoud — volledig ontzorgd</p>
+              <p className="text-sm text-slate-500 mt-0.5">domeinnaam, hosting, CMS, boekingssysteem &amp; onderhoud — volledig ontzorgd</p>
             </div>
             <ul className="mt-6 space-y-2.5">
               {['Compleet ontwerp op maat', 'Branche-tools inbegrepen', 'Zelf te beheren via CMS', 'Vindbaar in Google én AI'].map((t) => (

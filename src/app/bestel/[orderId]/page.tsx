@@ -32,7 +32,8 @@ export default async function BestelPage({ params }: { params: Promise<{ orderId
     { title: 'Domein koppelen', desc: 'Wij zetten jouw domeinnaam op de website.' },
     { title: 'Online', desc: 'Je website staat live.' },
   ];
-  const doneUpTo = status === 'delivered' ? 3 : status === 'domain_setup' ? 2 : 1; // 1 = betaald
+  // Aantal afgeronde stappen: betaald=1, domein doorgegeven=2, live=3.
+  const completed = status === 'delivered' ? 3 : status === 'domain_setup' ? 2 : 1;
 
   return (
     <div className="min-h-screen flex flex-col bg-white" style={{ fontFamily: 'var(--font-jakarta), sans-serif' }}>
@@ -52,13 +53,14 @@ export default async function BestelPage({ params }: { params: Promise<{ orderId
 
             <div className="mt-8 rounded-2xl border border-slate-200 p-6 shadow-sm">
               <h2 className="text-base font-bold mb-6">Wat er nu gebeurt</h2>
-              <ol className="space-y-6">
+              <ol className="space-y-7">
                 {steps.map((s, i) => {
                   const n = i + 1;
-                  const done = n < doneUpTo;
-                  const active = n === doneUpTo;
+                  const done = n <= completed;
+                  const active = n === completed + 1;
+                  const isDomainStep = n === 2;
                   return (
-                    <li key={s.title} className="flex items-center gap-4">
+                    <li key={s.title} className="flex gap-4">
                       <span
                         className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-base font-bold ${
                           done ? 'bg-emerald-500 text-white' : active ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'
@@ -66,22 +68,46 @@ export default async function BestelPage({ params }: { params: Promise<{ orderId
                       >
                         {done ? '✓' : n}
                       </span>
-                      <div>
+                      <div className="flex-1 pt-1">
                         <div className={`text-base font-bold ${active ? 'text-indigo-700' : done ? 'text-slate-900' : 'text-slate-400'}`}>
                           {s.title}
                           {active && <span className="ml-2 align-middle text-[11px] font-semibold text-white bg-indigo-600 rounded-full px-2 py-0.5">nu bezig</span>}
                         </div>
                         <div className="text-sm text-slate-500 mt-0.5">{s.desc}</div>
+
+                        {/* Stap 2: klant koppelt zelf zijn domeinnaam */}
+                        {isDomainStep && active && (
+                          <form action="/api/bestel/domain" method="post" className="mt-3">
+                            <input type="hidden" name="orderId" value={order.id} />
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Welke domeinnaam wil je?</label>
+                            <div className="flex gap-2">
+                              <input
+                                name="domain"
+                                required
+                                placeholder="bijv. salonbelle.nl"
+                                className="flex-1 rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                              />
+                              <button className="shrink-0 rounded-lg bg-indigo-600 text-white px-4 py-2.5 text-sm font-semibold hover:bg-indigo-700">
+                                Koppelen
+                              </button>
+                            </div>
+                            <p className="mt-2 text-xs text-slate-400">
+                              Je hebt al betaald — de domeinnaam zit bij je abonnement inbegrepen. Wij bestellen en koppelen 'm voor je.
+                            </p>
+                          </form>
+                        )}
+
+                        {/* Domein is doorgegeven */}
+                        {isDomainStep && done && order.domain && (
+                          <div className="mt-2 inline-flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-100 px-3 py-1.5 text-sm text-emerald-800">
+                            <span className="font-semibold">{order.domain}</span> · aangevraagd, wij zetten 'm live
+                          </div>
+                        )}
                       </div>
                     </li>
                   );
                 })}
               </ol>
-            </div>
-
-            <div className="mt-6 rounded-xl bg-indigo-50 border border-indigo-100 p-4 text-sm text-indigo-900">
-              We nemen contact met je op over de <strong>domeinnaam</strong>. Heb je al een
-              domein of een voorkeur? Mail het ons, dan koppelen we het en zetten we je site live.
             </div>
 
             {order.preview_url && (
@@ -103,9 +129,10 @@ export default async function BestelPage({ params }: { params: Promise<{ orderId
                 <span className="font-semibold">{euro(order.amount_cents)}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="text-slate-600">Hosting, CMS &amp; onderhoud</span>
+                <span className="text-slate-600">Domeinnaam, hosting &amp; onderhoud</span>
                 <span className="font-semibold">{euro(order.monthly_cents)}/mnd</span>
               </div>
+              <p className="pt-2 text-xs text-slate-400">Domeinnaam, hosting, CMS en onderhoud zitten allemaal bij het maandbedrag inbegrepen.</p>
               {order.preview_url && (
                 <a href={order.preview_url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-700">
                   Bekijk jouw website ↗
@@ -131,7 +158,7 @@ export default async function BestelPage({ params }: { params: Promise<{ orderId
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Zo werkt het</p>
               <ol className="space-y-2 text-sm text-slate-600">
                 <li>1. Betaal veilig met iDEAL.</li>
-                <li>2. Wij koppelen jouw domeinnaam aan de website.</li>
+                <li>2. Kies zelf je domeinnaam — die zit bij het abonnement inbegrepen.</li>
                 <li>3. Je website gaat live — klaar voor bezoekers.</li>
               </ol>
             </div>
