@@ -35,6 +35,33 @@ const sokFeatures = [
   },
 ];
 
+const dotasFeatures = [
+  {
+    t: 'Complete webshop',
+    d: 'Volledige webwinkel met categorieën per leerdomein en filters op leeftijd — kinderen van 3 tot 9 jaar vinden zo direct het juiste product.',
+  },
+  {
+    t: 'Online betalen',
+    d: 'Veilig afrekenen met iDEAL, creditcard en PayPal. Bestellingen vóór 16:00 gaan de volgende dag de deur uit.',
+  },
+  {
+    t: 'Loyaliteitssysteem',
+    d: 'Klanten sparen “Dotas munten” en komen zo steeds terug — een spaarsysteem dat vaste klanten beloont.',
+  },
+  {
+    t: 'Wenslijst & vergelijken',
+    d: 'Producten bewaren, vergelijken en later bestellen — precies wat een moderne webshop verwacht.',
+  },
+  {
+    t: 'Blog & merkverhaal',
+    d: 'Rond mascotte Dotas de giraf is een heel merk gebouwd, met blog en content die vertrouwen en herkenning opbouwen.',
+  },
+  {
+    t: 'Zakelijk & scholen',
+    d: 'Een aparte flow voor scholen en bulkbestellingen, naast de gewone consumentenwinkel.',
+  },
+];
+
 const concepts = [
   {
     img: '/img/voorbeeld-restaurant.jpg',
@@ -70,7 +97,7 @@ export default function PortfolioPage() {
           </h1>
           <p className="mt-6 text-lg text-[var(--ink)]/70 max-w-xl leading-relaxed">
             We bouwen geen &ldquo;kale&rdquo; websites, maar complete systemen die werk uit handen nemen.
-            Hieronder een echt project — en wat dat zo waardevol maakt.
+            Hieronder twee echte projecten — en wat ze zo waardevol maken.
           </p>
         </section>
 
@@ -138,6 +165,76 @@ export default function PortfolioPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* DotasToys case study */}
+        <section className="hair-b">
+          <div className="mx-auto max-w-[1200px] px-6 py-20">
+            <div className="grid lg:grid-cols-12 gap-10 items-start">
+              {/* Benefits */}
+              <div className="lg:col-span-6 lg:order-2">
+                <h3 className="font-display text-2xl md:text-3xl mb-6">
+                  Wat deze webshop <span className="italic text-[var(--accent)]">bijzonder</span> maakt
+                </h3>
+                <div className="divide-y divide-[var(--hair)]">
+                  {dotasFeatures.map((f) => (
+                    <div key={f.t} className="py-5 flex gap-4">
+                      <span className="text-[var(--accent)] text-lg leading-none mt-1">✦</span>
+                      <div>
+                        <div className="font-semibold">{f.t}</div>
+                        <p className="text-sm text-[var(--ink)]/65 leading-relaxed mt-0.5">{f.d}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Visual */}
+              <div className="lg:col-span-6 lg:order-1">
+                <a
+                  href="https://dotastoys.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group block rounded-2xl border border-[var(--hair)] bg-white shadow-xl overflow-hidden hover:-translate-y-1 transition-transform"
+                >
+                  <div className="flex items-center gap-1.5 px-4 h-9 border-b border-neutral-200 bg-neutral-50">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                    <span className="ml-3 text-[11px] text-neutral-400">dotastoys.com</span>
+                  </div>
+                  <div className="p-10" style={{ background: 'linear-gradient(135deg,#f4b21a,#e8f2d8)' }}>
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-[#5a6b2f]">
+                      Educatieve speelgoedwinkel
+                    </div>
+                    <div className="mt-3 text-[#2f3a12] text-3xl leading-tight font-extrabold">
+                      Leren &amp; spelen met Dotas de giraf 🦒
+                    </div>
+                    <div className="mt-6 inline-block text-xs font-semibold px-4 py-2 rounded-full bg-[#2f3a12] text-white">
+                      Shop nu
+                    </div>
+                  </div>
+                </a>
+                <div className="mt-6">
+                  <div className="text-[12px] uppercase tracking-[0.2em] text-[var(--ink-soft)] mb-2">Het project</div>
+                  <h2 className="font-display text-3xl mb-3">DotasToys</h2>
+                  <p className="text-[var(--ink)]/70 leading-relaxed">
+                    Een complete educatieve speelgoedwinkel voor kinderen van 3 tot 9 jaar, met producten
+                    die samen met leerkrachten en pedagogen zijn gekozen. Wij bouwden een volwaardige
+                    webshop met betalen, sparen en een eigen merkverhaal.
+                  </p>
+                  <a
+                    href="https://dotastoys.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-4 inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline"
+                  >
+                    Bekijk de live site →
+                  </a>
                 </div>
               </div>
             </div>
