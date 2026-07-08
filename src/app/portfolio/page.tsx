@@ -35,30 +35,48 @@ const sokFeatures = [
   },
 ];
 
+const dotasLeerdomeinen = [
+  'Taal & Letters',
+  'Cijfers & Rekenen',
+  'Groei & Emoties',
+  'Oriëntatie & Tijd',
+  'Creëren & Kleuren',
+  'Dotas Boxes',
+  'Fanshop',
+];
+
 const dotasFeatures = [
   {
-    t: 'Complete webshop',
-    d: 'Volledige webwinkel met categorieën per leerdomein en filters op leeftijd — kinderen van 3 tot 9 jaar vinden zo direct het juiste product.',
+    t: 'Complete webshop met slimme indeling',
+    d: 'Alle producten geordend per leerdomein en te filteren op de exacte leeftijd van het kind (3–9 jaar). Ouders vinden zo binnen enkele klikken precies wat past bij het ontwikkelingsniveau — in plaats van eindeloos scrollen.',
   },
   {
-    t: 'Online betalen',
-    d: 'Veilig afrekenen met iDEAL, creditcard en PayPal. Bestellingen vóór 16:00 gaan de volgende dag de deur uit.',
+    t: 'Online betalen — meerdere methoden',
+    d: 'Veilig afrekenen met iDEAL, Visa, Mastercard en PayPal. De volledige afrekenflow is geïntegreerd: van winkelmandje tot bevestiging, zonder externe tussenstappen.',
   },
   {
-    t: 'Loyaliteitssysteem',
-    d: 'Klanten sparen “Dotas munten” en komen zo steeds terug — een spaarsysteem dat vaste klanten beloont.',
+    t: 'Dotas munten — loyaliteitssysteem',
+    d: 'Klanten sparen bij elke aankoop “Dotas munten” die ze later inwisselen. Een eigen spaarsysteem dat terugkerende klanten beloont en de gemiddelde klantwaarde verhoogt — normaal een dure externe plugin, hier ingebouwd.',
   },
   {
-    t: 'Wenslijst & vergelijken',
-    d: 'Producten bewaren, vergelijken en later bestellen — precies wat een moderne webshop verwacht.',
+    t: 'Wenslijst & productvergelijking',
+    d: 'Bezoekers bewaren favorieten op een wenslijst en zetten producten naast elkaar om te vergelijken. Zo keren twijfelaars terug en ronden ze vaker hun aankoop af.',
   },
   {
-    t: 'Blog & merkverhaal',
-    d: 'Rond mascotte Dotas de giraf is een heel merk gebouwd, met blog en content die vertrouwen en herkenning opbouwen.',
+    t: 'Bezorging & retour, netjes geregeld',
+    d: 'Besteld vóór 16:00 = de volgende dag verzonden, gratis verzending vanaf €25 (NL & BE) en 14 dagen retourrecht — allemaal duidelijk in de winkel verwerkt zodat het vertrouwen wekt.',
+  },
+  {
+    t: 'Merk rond Dotas de giraf',
+    d: 'Een compleet merkverhaal met mascotte Dotas de giraf als leer-rolmodel, ondersteund door blogcontent. Producten worden samen met leerkrachten en pedagogen geselecteerd — dat straalt de hele site uit.',
   },
   {
     t: 'Zakelijk & scholen',
-    d: 'Een aparte flow voor scholen en bulkbestellingen, naast de gewone consumentenwinkel.',
+    d: 'Naast de gewone consumentenwinkel een aparte flow voor scholen en bulkbestellingen — één platform dat twee doelgroepen tegelijk bedient.',
+  },
+  {
+    t: 'Snel, mobiel & vindbaar',
+    d: 'Bliksemsnel en mobielvriendelijk, met een structuur die goed scoort in Google én AI-zoekmachines — zodat ouders de winkel ook echt vinden.',
   },
 ];
 
@@ -223,15 +241,34 @@ export default function PortfolioPage() {
                   <div className="text-[12px] uppercase tracking-[0.2em] text-[var(--ink-soft)] mb-2">Het project</div>
                   <h2 className="font-display text-3xl mb-3">DotasToys</h2>
                   <p className="text-[var(--ink)]/70 leading-relaxed">
-                    Een complete educatieve speelgoedwinkel voor kinderen van 3 tot 9 jaar, met producten
-                    die samen met leerkrachten en pedagogen zijn gekozen. Wij bouwden een volwaardige
-                    webshop met betalen, sparen en een eigen merkverhaal.
+                    Een complete educatieve speelgoedwinkel voor kinderen van 3 tot 9 jaar. Elk product
+                    wordt samen met leerkrachten en pedagogen geselecteerd, en het hele merk draait om
+                    mascotte Dotas de giraf als leer-rolmodel. Wij bouwden hiervoor een volwaardige
+                    webshop: van een slimme categorie-indeling per leerdomein en filters op leeftijd,
+                    tot online betalen, een eigen spaarsysteem en een aparte flow voor scholen.
                   </p>
+                  <p className="text-[var(--ink)]/70 leading-relaxed mt-3">
+                    Alles zit in één platform — geen los kassasysteem, geen dure plugins en niets wat
+                    de eigenaar zelf niet kan beheren. Precies wat een moderne webwinkel nodig heeft om
+                    dagelijks te verkopen én terugkerende klanten op te bouwen.
+                  </p>
+
+                  <div className="mt-5">
+                    <div className="text-[11px] uppercase tracking-[0.16em] text-[var(--ink-soft)] mb-2">Categorieën per leerdomein</div>
+                    <div className="flex flex-wrap gap-2">
+                      {dotasLeerdomeinen.map((cat) => (
+                        <span key={cat} className="text-xs rounded-full border border-[var(--hair)] bg-white px-3 py-1 text-[var(--ink)]/75">
+                          {cat}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
                   <a
                     href="https://dotastoys.com"
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-4 inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline"
+                    className="mt-5 inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline"
                   >
                     Bekijk de live site →
                   </a>
