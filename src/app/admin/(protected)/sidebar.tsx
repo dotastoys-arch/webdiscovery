@@ -28,6 +28,7 @@ const groups: { label: string; items: { href: string; icon: string; label: strin
       { href: '/admin/orders', icon: 'orders', label: 'Bestellingen' },
     ],
   },
+  { label: 'Klanten', items: [{ href: '/admin/aitd', icon: 'globe', label: 'AITD-portaal' }] },
   { label: 'Platform', items: [{ href: '/admin/settings', icon: 'settings', label: 'Instellingen' }] },
 ];
 

@@ -3,12 +3,13 @@
 import { useState } from 'react';
 
 // Contactformulier voor de AITD-one-pager; post naar /api/aitd-contact.
-export function ContactForm() {
+export function ContactForm({ disabled }: { disabled?: boolean }) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (disabled) return;
     setStatus('sending');
     setError(null);
     const form = e.currentTarget;
@@ -77,7 +78,7 @@ export function ContactForm() {
         <p className="text-xs text-slate-400">Your details are used only to respond to your enquiry.</p>
         <button
           type="submit"
-          disabled={status === 'sending'}
+          disabled={disabled || status === 'sending'}
           className="rounded-sm bg-white px-7 py-3.5 text-sm font-semibold text-[#0B2E52] transition hover:bg-slate-100 disabled:opacity-60"
         >
           {status === 'sending' ? 'Sending…' : 'Send message'}
