@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { AitdMark } from './logo';
+import { MobileMenu } from './mobile-menu';
 
 // One-pager voor klant AITD Consulting BV (Engelstalig). Wordt later ook via
 // aitdconsulting.eu geserveerd (zie host-routing in src/proxy.ts).
@@ -87,7 +88,7 @@ export default function AitdPage() {
               Consulting
             </span>
           </a>
-          <nav className={`${heading.className} flex items-center gap-8 text-sm font-medium text-slate-600`}>
+          <nav className={`${heading.className} flex items-center gap-3 md:gap-8 text-sm font-medium text-slate-600`}>
             <a href="#services" className="hidden md:inline hover:text-[#0B2E52]">Services</a>
             <a href="#approach" className="hidden md:inline hover:text-[#0B2E52]">Approach</a>
             <a href="#focus" className="hidden md:inline hover:text-[#0B2E52]">Focus</a>
@@ -98,6 +99,7 @@ export default function AitdPage() {
             >
               Contact
             </a>
+            <MobileMenu />
           </nav>
         </div>
       </header>
