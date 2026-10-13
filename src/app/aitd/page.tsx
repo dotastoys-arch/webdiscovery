@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { AitdMark } from './logo';
 import { MobileMenu } from './mobile-menu';
 import { Radar } from './radar';
+import { ContactForm } from './contact-form';
 
 // One-pager voor klant AITD Consulting BV (Engelstalig). Wordt later ook via
 // aitdconsulting.eu geserveerd (zie host-routing in src/proxy.ts).
@@ -11,7 +12,6 @@ import { Radar } from './radar';
 const heading = { className: 'font-[family-name:var(--font-jakarta)]' };
 const text = { className: 'font-[family-name:var(--font-body)]' };
 
-const CONTACT_EMAIL = 'info@aitdconsulting.eu';
 
 export const metadata: Metadata = {
   title: 'AITD Consulting — Geopolitical analysis & strategic foresight',
@@ -238,8 +238,8 @@ export default function AitdPage() {
       {/* Contact */}
       <section id="contact" className="relative overflow-hidden text-white" style={{ background: NAVY }}>
         <GridBackdrop />
-        <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28 grid md:grid-cols-2 gap-10 items-end">
-          <div>
+        <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-28 grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-5">
             <p className={`${heading.className} text-xs font-semibold tracking-[0.3em] uppercase text-[#8FB4D9]`}>Contact</p>
             <h2 className={`${heading.className} mt-4 text-3xl md:text-4xl font-bold tracking-tight`}>
               Facing a complex environment? Let&apos;s talk.
@@ -248,14 +248,8 @@ export default function AitdPage() {
               Tell us about your requirements and we will propose an analytical product that fits — in confidence.
             </p>
           </div>
-          <div className="md:text-right">
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className={`${heading.className} inline-block rounded-sm bg-white px-7 py-4 text-sm font-semibold transition hover:bg-slate-100`}
-              style={{ color: NAVY }}
-            >
-              {CONTACT_EMAIL}
-            </a>
+          <div className={`${heading.className} md:col-span-7`}>
+            <ContactForm />
           </div>
         </div>
       </section>
