@@ -2,15 +2,8 @@
 
 import { useState } from 'react';
 
-const links = [
-  { href: '#services', label: 'Services' },
-  { href: '#approach', label: 'Approach' },
-  { href: '#focus', label: 'Focus' },
-  { href: '#contact', label: 'Contact' },
-];
-
 // Uitklapmenu voor kleine schermen (op desktop staan de links in de header).
-export function MobileMenu() {
+export function MobileMenu({ links }: { links: { href: string; label: string }[] }) {
   const [open, setOpen] = useState(false);
 
   return (
