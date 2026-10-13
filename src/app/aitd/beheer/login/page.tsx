@@ -1,13 +1,15 @@
 import { redirect } from 'next/navigation';
 import { getEditor } from '@/lib/aitd/auth';
 import { hasDb } from '@/lib/db';
+import { aitdBase } from '@/lib/aitd/host';
 import { AitdMark } from '../../logo';
 import { LoginForm } from './login-form';
 
 export const dynamic = 'force-dynamic';
 
 export default async function LoginPage() {
-  if (hasDb() && (await getEditor())) redirect('/aitd/beheer');
+  const base = await aitdBase();
+  if (hasDb() && (await getEditor())) redirect(`${base}/beheer`);
   return (
     <div className="flex-1 flex items-center justify-center bg-slate-50 px-4 py-16">
       <div className="w-full max-w-sm">
@@ -17,7 +19,7 @@ export default async function LoginPage() {
           <p className="mt-1 text-sm text-slate-500">Beheer van de AITD Consulting-website</p>
         </div>
         <div className="mt-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-          <LoginForm />
+          <LoginForm base={base} />
         </div>
         <p className="mt-6 text-center text-xs text-slate-400">
           Wachtwoord vergeten? Neem contact op met je webbouwer (WebDiscovery).

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getPublishedSite } from '@/lib/aitd/db';
+import { aitdBase } from '@/lib/aitd/host';
 import { SiteView } from './_site/render';
 
 // Publieke site van klant AITD Consulting BV. De inhoud komt uit de database en
@@ -19,5 +20,5 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AitdHome() {
   const site = await getPublishedSite();
-  return <SiteView ctx={{ site, page: site.pages[0], base: '/aitd' }} />;
+  return <SiteView ctx={{ site, page: site.pages[0], base: await aitdBase() }} />;
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPublishedSite } from '@/lib/aitd/db';
+import { aitdBase } from '@/lib/aitd/host';
 import { SiteView } from '../_site/render';
 
 // Losse pagina's van de AITD-site (alleen bij de opzet "meerdere pagina's").
@@ -29,5 +30,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AitdPage({ params }: Props) {
   const found = await findPage((await params).slug);
   if (!found) notFound();
-  return <SiteView ctx={{ site: found.site, page: found.page, base: '/aitd' }} />;
+  return <SiteView ctx={{ site: found.site, page: found.page, base: await aitdBase() }} />;
 }

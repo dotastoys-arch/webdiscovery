@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { verifySessionToken, SESSION_COOKIE } from '@/lib/auth';
+import { AITD_DOMAINS } from '@/lib/aitd/domains';
 
 // Hoofddomeinen van WebDiscovery zelf: hierop draait de normale site + admin.
 // Alle andere hosts zijn klantdomeinen → die serveren we via /live.
@@ -14,9 +15,27 @@ function isMainHost(host: string): boolean {
   );
 }
 
+// Domein → route van een handgebouwde klantsite in src/app.
+const STATIC_SITES: Record<string, string> = Object.fromEntries(AITD_DOMAINS.map((d) => [d, '/aitd']));
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = request.headers.get('host') || '';
+
+  // 0) Handgebouwde klantsites met een eigen domein → vaste route (API en assets ongemoeid).
+  const h = host.split(':')[0].toLowerCase().replace(/^www\./, '');
+  const staticSite = STATIC_SITES[h];
+  if (staticSite) {
+    const passThrough =
+      pathname.startsWith('/_next') ||
+      pathname.startsWith('/api') ||
+      pathname === staticSite ||
+      pathname.startsWith(`${staticSite}/`);
+    if (passThrough) return NextResponse.next();
+    const url = request.nextUrl.clone();
+    url.pathname = `${staticSite}${pathname === '/' ? '' : pathname}`;
+    return NextResponse.rewrite(url);
+  }
 
   // 1) Klantdomein? Serveer de gekoppelde live-site (host-routing).
   if (
