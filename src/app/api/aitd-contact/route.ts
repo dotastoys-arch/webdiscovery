@@ -3,7 +3,8 @@ import { Resend } from 'resend';
 import { z } from 'zod';
 
 // Contactformulier van de AITD-one-pager (/aitd). Stuurt het bericht door naar
-// het adres in AITD_CONTACT_TO (Vercel env), zodat dat nergens op de site staat.
+// AITD (alleen server-side, dus het adres staat nergens op de site). Overschrijfbaar
+// via AITD_CONTACT_TO in Vercel.
 const schema = z.object({
   name: z.string().trim().min(1, 'Please enter your name.').max(120),
   email: z.string().trim().email('Please enter a valid email address.').max(200),
@@ -24,9 +25,9 @@ export async function POST(req: NextRequest) {
   const d = parsed.data;
   if (d.nickname) return NextResponse.json({ ok: true }); // honeypot gevuld → stil negeren
 
-  const to = process.env.AITD_CONTACT_TO;
-  if (!process.env.RESEND_API_KEY || !to) {
-    console.error('[aitd-contact] RESEND_API_KEY of AITD_CONTACT_TO ontbreekt');
+  const to = process.env.AITD_CONTACT_TO ?? 'info@aitdconsulting.eu';
+  if (!process.env.RESEND_API_KEY) {
+    console.error('[aitd-contact] RESEND_API_KEY ontbreekt');
     return NextResponse.json({ error: 'The form is temporarily unavailable. Please try again later.' }, { status: 503 });
   }
 
