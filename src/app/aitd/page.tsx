@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
-import { Montserrat, Inter } from 'next/font/google';
 import { AitdMark } from './logo';
 
 // One-pager voor klant AITD Consulting BV (Engelstalig). Wordt later ook via
 // aitdconsulting.eu geserveerd (zie host-routing in src/proxy.ts).
 
-const heading = Montserrat({ subsets: ['latin'], weight: ['500', '600', '700'] });
-const text = Inter({ subsets: ['latin'] });
+// Fonts komen uit de root-layout (Plus Jakarta Sans + Hanken Grotesk), zodat
+// deze pagina geen extra Google Fonts-download nodig heeft tijdens de build.
+const heading = { className: 'font-[family-name:var(--font-jakarta)]' };
+const text = { className: 'font-[family-name:var(--font-body)]' };
 
 const CONTACT_EMAIL = 'info@aitdconsulting.eu';
 
