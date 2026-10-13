@@ -20,8 +20,12 @@ export function hasAuthConfig(): boolean {
 }
 
 export function verifyCredentials(email: string, password: string): boolean {
-  const okEmail = email.trim().toLowerCase() === (process.env.ADMIN_EMAIL ?? '').toLowerCase();
-  const okPass = password === process.env.ADMIN_PASSWORD;
+  // Spaties/enters rond de waarden (bijv. per ongeluk meegeplakt in Vercel) negeren.
+  const expectedEmail = (process.env.ADMIN_EMAIL ?? '').trim().toLowerCase();
+  const expectedPass = (process.env.ADMIN_PASSWORD ?? '').trim();
+  if (!expectedEmail || !expectedPass) return false;
+  const okEmail = email.trim().toLowerCase() === expectedEmail;
+  const okPass = password.trim() === expectedPass;
   return okEmail && okPass;
 }
 
