@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { AitdMark } from './logo';
 import { MobileMenu } from './mobile-menu';
+import { Radar } from './radar';
 
 // One-pager voor klant AITD Consulting BV (Engelstalig). Wordt later ook via
 // aitdconsulting.eu geserveerd (zie host-routing in src/proxy.ts).
@@ -312,40 +313,6 @@ function GridBackdrop() {
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#aitd-grid)" />
-    </svg>
-  );
-}
-
-// Decoratief "monitoring"-beeld in de hero.
-function Radar() {
-  return (
-    <svg viewBox="0 0 400 400" className="w-full max-w-md ml-auto" aria-hidden>
-      <g fill="none" stroke="#8FB4D9" strokeOpacity="0.35">
-        <circle cx="200" cy="200" r="60" />
-        <circle cx="200" cy="200" r="110" />
-        <circle cx="200" cy="200" r="160" strokeDasharray="2 6" />
-        <path d="M200 20v360M20 200h360" strokeOpacity="0.2" />
-      </g>
-      <path d="M200 200 L313 87 A160 160 0 0 1 360 200 Z" fill="url(#sweep)" />
-      <defs>
-        <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor={ACCENT} stopOpacity="0.55" />
-          <stop offset="1" stopColor={ACCENT} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      {[
-        [262, 142, 'FP-01'],
-        [128, 250, 'FP-02'],
-        [290, 268, 'FP-03'],
-      ].map(([x, y, l]) => (
-        <g key={l as string}>
-          <rect x={(x as number) - 5} y={(y as number) - 5} width="10" height="10" transform={`rotate(45 ${x} ${y})`} fill="#fff" />
-          <circle cx={x as number} cy={y as number} r="14" fill="none" stroke="#fff" strokeOpacity="0.4" />
-          <text x={(x as number) + 20} y={(y as number) + 4} fill="#8FB4D9" fontSize="11" letterSpacing="2" fontFamily="monospace">
-            {l}
-          </text>
-        </g>
-      ))}
     </svg>
   );
 }
