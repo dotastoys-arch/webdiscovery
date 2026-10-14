@@ -120,6 +120,19 @@ export function SiteFooter() {
         </span>
         <span>© {new Date().getFullYear()}</span>
       </div>
+      <div className="border-t border-slate-100">
+        <div className="mx-auto max-w-6xl px-6 py-4 text-center text-xs text-slate-400">
+          Website by{' '}
+          <a
+            href="https://webdiscovery.nl/?utm_source=aitd&utm_medium=footer"
+            target="_blank"
+            rel="noopener"
+            className="font-semibold text-slate-500 underline-offset-4 hover:text-[#0B2E52] hover:underline"
+          >
+            WebDiscovery
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }
