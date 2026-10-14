@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { anchorOf } from '@/lib/aitd/types';
 import { useEditor } from './state';
 import { MediaLibrary } from './media-library';
+import { useUi } from './ui';
 
 // Formulier-bouwstenen voor het instellingenpaneel van een blok.
 
@@ -280,6 +281,7 @@ export function ListEditor<T>({
   render: (item: T, set: (v: T) => void, i: number) => React.ReactNode;
 }) {
   const { readOnly } = useEditor();
+  const { toast } = useUi();
   const [open, setOpen] = useState<number | null>(items.length ? 0 : null);
   const move = (i: number, dir: -1 | 1) => {
     const j = i + dir;
@@ -311,7 +313,10 @@ export function ListEditor<T>({
                   title="Verwijderen"
                   danger
                   onClick={() => {
-                    if (confirm('Dit item verwijderen?')) onChange(items.filter((_, k) => k !== i));
+                    const before = items;
+                    onChange(items.filter((_, k) => k !== i));
+                    setOpen(null);
+                    toast(`“${itemTitle(it, i) || 'Item'}” verwijderd`, { label: 'Ongedaan maken', onClick: () => onChange(before) });
                   }}
                 >
                   ✕

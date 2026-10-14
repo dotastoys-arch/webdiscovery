@@ -6,6 +6,7 @@ import { newId } from '@/lib/aitd/types';
 import { BLOCK_LABELS, makeBlock } from '@/lib/aitd/defaults';
 import { BlockView, SiteFooter, SiteHeader, type RenderCtx } from '../../_site/render';
 import { useEditor } from './state';
+import { useUi } from './ui';
 
 // Wat er gesleept wordt (palet → canvas, of blok binnen het canvas).
 export type DragPayload = { kind: 'new'; type: BlockType } | { kind: 'move'; id: string };
@@ -32,6 +33,7 @@ export function insertBlock(blocks: Block[], payload: DragPayload, index: number
 
 export function Canvas() {
   const { doc, page, pageIndex, update, select, selectedId, readOnly } = useEditor();
+  const { toast } = useUi();
   const [dropIndex, setDropIndex] = useState<number | null>(null);
   const [zoom, setZoom] = useState(1);
   const outer = useRef<HTMLDivElement>(null);
@@ -104,12 +106,22 @@ export function Canvas() {
   }
 
   function remove(id: string) {
-    const b = blocks.find((x) => x.id === id);
-    if (!b || !confirm(`“${BLOCK_LABELS[b.type].name}” verwijderen? (Je kunt dit ongedaan maken met de pijl linksboven.)`)) return;
+    const index = blocks.findIndex((x) => x.id === id);
+    if (index < 0) return;
+    const removed = blocks[index];
     update((d) => {
       d.pages[pageIndex].blocks = d.pages[pageIndex].blocks.filter((x) => x.id !== id);
     });
     if (selectedId === id) select(null);
+    // Direct verwijderen, met een knop om het terug te zetten.
+    toast(`“${BLOCK_LABELS[removed.type].name}” verwijderd`, {
+      label: 'Ongedaan maken',
+      onClick: () =>
+        update((d) => {
+          const list = d.pages[pageIndex]?.blocks;
+          if (list && !list.some((x) => x.id === removed.id)) list.splice(Math.min(index, list.length), 0, removed);
+        }),
+    });
   }
 
   return (

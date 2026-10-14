@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useUi } from './ui';
 
 type Item = { id: string; name: string; bytes: number; width: number | null; height: number | null; inUse: boolean };
 
@@ -55,6 +56,7 @@ export function MediaLibrary({ onClose, onPick }: { onClose: () => void; onPick:
   const [busy, setBusy] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [over, setOver] = useState(false);
+  const { confirm } = useUi();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(
@@ -96,7 +98,7 @@ export function MediaLibrary({ onClose, onPick }: { onClose: () => void; onPick:
   }
 
   async function remove(it: Item) {
-    if (!confirm(`"${it.name || 'Deze foto'}" definitief verwijderen?`)) return;
+    if (!(await confirm({ title: 'Foto definitief verwijderen?', message: `“${it.name || 'Deze foto'}” wordt uit de fotobibliotheek gehaald. Dit kan niet ongedaan worden gemaakt.`, confirmLabel: 'Verwijderen', danger: true }))) return;
     const res = await fetch(`/api/aitd/media/${it.id}`, { method: 'DELETE' });
     const j = await res.json().catch(() => ({}));
     if (!res.ok) setError(j.error ?? 'Verwijderen mislukt.');
