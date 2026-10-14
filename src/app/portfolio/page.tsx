@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SiteHeader, SiteFooter } from '@/components/site-chrome';
+import { AitdMark } from '@/app/aitd/logo';
 
 export const metadata: Metadata = {
   title: 'Portfolio — WebDiscovery',
@@ -80,6 +81,41 @@ const dotasFeatures = [
   },
 ];
 
+const aitdFeatures = [
+  {
+    t: 'Huisstijl tot in het kleinste detail',
+    d: 'Het logo is als scherpe vectortekening nagebouwd, de kleuren en typografie sluiten naadloos aan, en een interactieve radar in het openingsbeeld volgt de muis — passend bij een bureau dat “All in the detail” als motto heeft.',
+  },
+  {
+    t: 'Zelf bouwen met slepen en neerzetten',
+    d: 'De klant sleept kant-en-klare onderdelen — diensten, werkwijze, tekst, foto’s, galerij, citaat, contactformulier — op de pagina en past teksten aan met een live voorbeeld. Geen technische kennis nodig.',
+  },
+  {
+    t: 'Eén pagina of meerdere pagina’s',
+    d: 'Met één klik schakelen tussen een compacte one-pager en een site met meerdere pagina’s. Het menu past zich automatisch aan.',
+  },
+  {
+    t: 'Concept, publiceren en ongedaan maken',
+    d: 'Wijzigingen worden eerst als concept bewaard en pas na “Publiceren” zichtbaar voor bezoekers. Een foutje is met één klik ongedaan gemaakt.',
+  },
+  {
+    t: 'Fotobibliotheek met automatische optimalisatie',
+    d: 'Foto’s uploaden door ze erin te slepen. Ze worden automatisch verkleind zodat de site snel blijft, met het aanbevolen formaat per plek erbij.',
+  },
+  {
+    t: 'Veilig klantportaal met vangnet',
+    d: 'Een eigen login met versleutelde wachtwoorden en blokkade bij inbraakpogingen. Elke gepubliceerde versie wordt bewaard, zodat wij altijd kunnen meekijken, bijsturen of een eerdere versie terugzetten.',
+  },
+  {
+    t: 'Contactformulier zonder spam-magneet',
+    d: 'Bezoekers nemen contact op via een formulier; het e-mailadres staat nergens op de site, zodat spambots het niet kunnen oppikken.',
+  },
+  {
+    t: 'Klaar voor Google én AI',
+    d: 'Bedrijfsgegevens in een vorm die zoekmachines direct begrijpen, een sitemap en een speciale samenvatting voor AI-zoekmachines — automatisch actief zodra de site op het eigen domein staat.',
+  },
+];
+
 const concepts = [
   {
     img: '/img/voorbeeld-restaurant.jpg',
@@ -115,7 +151,7 @@ export default function PortfolioPage() {
           </h1>
           <p className="mt-6 text-lg text-[var(--ink)]/70 max-w-xl leading-relaxed">
             We bouwen geen &ldquo;kale&rdquo; websites, maar complete systemen die werk uit handen nemen.
-            Hieronder twee echte projecten — en wat ze zo waardevol maken.
+            Hieronder drie echte projecten — en wat ze zo waardevol maken.
           </p>
         </section>
 
@@ -272,6 +308,100 @@ export default function PortfolioPage() {
                   >
                     Bekijk de live site →
                   </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* AITD Consulting case study */}
+        <section className="hair-b bg-[var(--paper-2)]">
+          <div className="mx-auto max-w-[1200px] px-6 py-20">
+            <div className="grid lg:grid-cols-12 gap-10 items-start">
+              {/* Visual */}
+              <div className="lg:col-span-6">
+                <a
+                  href="/aitd"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group block rounded-2xl border border-[var(--hair)] bg-white shadow-xl overflow-hidden hover:-translate-y-1 transition-transform"
+                >
+                  <div className="flex items-center gap-1.5 px-4 h-9 border-b border-neutral-200 bg-neutral-50">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                    <span className="ml-3 text-[11px] text-neutral-400">aitdconsulting.eu</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3 px-6 h-12 bg-white border-b border-neutral-100">
+                    <AitdMark className="h-4 w-auto" />
+                    <span className="text-[10px] font-semibold px-3 py-1.5 rounded-sm text-white" style={{ background: '#0B2E52' }}>
+                      Contact
+                    </span>
+                  </div>
+                  <div className="relative p-10 overflow-hidden" style={{ background: '#0B2E52' }}>
+                    <svg className="absolute -right-10 -top-6 h-64 w-64 opacity-60" viewBox="0 0 400 400" aria-hidden>
+                      <g fill="none" stroke="#8FB4D9" strokeOpacity="0.35">
+                        <circle cx="200" cy="200" r="60" />
+                        <circle cx="200" cy="200" r="110" />
+                        <circle cx="200" cy="200" r="160" strokeDasharray="2 6" />
+                      </g>
+                      <path d="M200 200 L313 87 A160 160 0 0 1 360 200 Z" fill="#4479AB" fillOpacity="0.45" />
+                      <rect x="257" y="137" width="10" height="10" transform="rotate(45 262 142)" fill="#fff" />
+                      <rect x="123" y="245" width="10" height="10" transform="rotate(45 128 250)" fill="#fff" />
+                    </svg>
+                    <div className="relative text-[10px] uppercase tracking-[0.25em]" style={{ color: '#8FB4D9' }}>
+                      Geopolitical risk &amp; intelligence advisory
+                    </div>
+                    <div className="relative mt-3 text-white text-3xl leading-tight font-bold">
+                      Strategic foresight.
+                      <br />
+                      <span style={{ color: '#8FB4D9' }}>All in the detail.</span>
+                    </div>
+                    <div className="relative mt-6 inline-block text-xs font-semibold px-4 py-2 rounded-sm bg-white" style={{ color: '#0B2E52' }}>
+                      Discuss your requirements
+                    </div>
+                  </div>
+                </a>
+                <div className="mt-6">
+                  <div className="text-[12px] uppercase tracking-[0.2em] text-[var(--ink-soft)] mb-2">Het project</div>
+                  <h2 className="font-display text-3xl mb-3">AITD Consulting</h2>
+                  <p className="text-[var(--ink)]/70 leading-relaxed">
+                    Een adviesbureau voor geopolitieke analyse en strategische vooruitblik, met de focus op het
+                    Midden-Oosten, Noord-Afrika en de Hoorn van Afrika. Wij bouwden een strakke Engelstalige
+                    website in hun eigen huisstijl, met een uitstraling die past bij hun vakgebied: rustig,
+                    precies en betrouwbaar.
+                  </p>
+                  <p className="text-[var(--ink)]/70 leading-relaxed mt-3">
+                    Daaronder zit een eigen beheeromgeving waarmee de klant de site zelf opbouwt en
+                    uitbreidt — met slepen en neerzetten, zonder technische kennis. En gaat er ooit iets mis,
+                    dan kunnen wij altijd meekijken en elke eerdere versie terugzetten.
+                  </p>
+                  <a
+                    href="/aitd"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-5 inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] link-underline"
+                  >
+                    Bekijk de site →
+                  </a>
+                </div>
+              </div>
+
+              {/* Benefits */}
+              <div className="lg:col-span-6">
+                <h3 className="font-display text-2xl md:text-3xl mb-6">
+                  Wat deze website <span className="italic text-[var(--accent)]">bijzonder</span> maakt
+                </h3>
+                <div className="divide-y divide-[var(--hair)]">
+                  {aitdFeatures.map((f) => (
+                    <div key={f.t} className="py-5 flex gap-4">
+                      <span className="text-[var(--accent)] text-lg leading-none mt-1">✦</span>
+                      <div>
+                        <div className="font-semibold">{f.t}</div>
+                        <p className="text-sm text-[var(--ink)]/65 leading-relaxed mt-0.5">{f.d}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
