@@ -274,7 +274,7 @@ function Shell({
           </div>
           <div className="flex-1 overflow-y-auto">
             {tab === 'blocks' && <Palette />}
-            {tab === 'pages' && <PagesPanel />}
+            {tab === 'pages' && <PagesPanel onBuild={() => setTab('blocks')} />}
             {tab === 'settings' && <SettingsPanel />}
           </div>
         </aside>

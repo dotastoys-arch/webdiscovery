@@ -126,6 +126,13 @@ export function Canvas() {
 
   return (
     <div ref={outer} className="h-full overflow-y-auto bg-slate-200/70 px-6 py-6" onClick={() => select(null)}>
+      {doc.layout === 'multi_page' && (
+        <div className="mx-auto mb-3 flex items-center gap-2 text-sm text-slate-600" style={{ width: DESIGN_WIDTH * zoom }}>
+          <span className="rounded bg-[#0B2E52] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">Pagina</span>
+          <strong className="text-slate-800">{page.title}</strong>
+          <span className="text-slate-400">/aitd{page.slug ? `/${page.slug}` : ''}</span>
+        </div>
+      )}
       <div
         className="mx-auto overflow-hidden rounded-md bg-white shadow-xl ring-1 ring-slate-300"
         style={{ width: DESIGN_WIDTH, zoom }}
