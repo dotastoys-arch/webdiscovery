@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { hasDb } from '@/lib/db';
 import { getEditor } from '@/lib/aitd/auth';
 import { getSiteRow } from '@/lib/aitd/db';
+import { aitdBase } from '@/lib/aitd/host';
 import { Editor } from './editor/editor';
 
 export const dynamic = 'force-dynamic';
@@ -11,8 +12,9 @@ export default async function BeheerPage() {
   if (!hasDb()) {
     return <p className="p-10 text-center text-sm text-slate-500">De database is niet gekoppeld.</p>;
   }
+  const base = await aitdBase();
   const editor = await getEditor();
-  if (!editor) redirect('/aitd/beheer/login');
+  if (!editor) redirect(`${base}/beheer/login`);
   const row = await getSiteRow();
 
   return (
@@ -32,6 +34,7 @@ export default async function BeheerPage() {
           locked={row.clientLocked}
           publishedAt={row.publishedAt}
           updatedAt={row.updatedAt}
+          base={base}
         />
       </div>
     </>

@@ -55,7 +55,8 @@ export function navLinks(ctx: RenderCtx): { href: string; label: string; active?
 
 export function SiteView({ ctx }: { ctx: RenderCtx }) {
   return (
-    <div className={`${bodyFont} flex-1 bg-white text-slate-700`}>
+    // lang="en": de site is Engelstalig (de root-layout staat op Nederlands).
+    <div lang="en" className={`${bodyFont} flex-1 bg-white text-slate-700`}>
       <SiteHeader ctx={ctx} />
       <main>
         {ctx.page.blocks.map((b) => (

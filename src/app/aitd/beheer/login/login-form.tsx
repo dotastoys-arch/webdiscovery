@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export function LoginForm() {
+export function LoginForm({ base }: { base: string }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -17,7 +17,7 @@ export function LoginForm() {
       body: JSON.stringify(data),
     }).catch(() => null);
     if (res?.ok) {
-      window.location.href = '/aitd/beheer';
+      window.location.href = `${base}/beheer`;
       return;
     }
     const j = res ? await res.json().catch(() => ({})) : {};

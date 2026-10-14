@@ -18,6 +18,7 @@ type Props = {
   locked: boolean;
   publishedAt: string | null;
   updatedAt: string;
+  base: string;
 };
 
 type Status = { kind: 'idle' | 'saving' | 'saved' | 'error' | 'publishing' | 'published'; text?: string };
@@ -36,6 +37,7 @@ export function Editor(props: Props) {
 }
 
 function Shell({
+  base,
   rev: initialRev,
   role,
   userLabel,
@@ -95,7 +97,7 @@ function Shell({
       return;
     }
     await fetch('/api/aitd/auth/logout', { method: 'POST' });
-    window.location.href = '/aitd/beheer/login';
+    window.location.href = `${base}/beheer/login`;
   }
 
   // Ctrl/Cmd+S = opslaan, Ctrl/Cmd+Z = ongedaan maken.
@@ -134,7 +136,7 @@ function Shell({
     }
   }, [status]);
 
-  const pageUrl = `/aitd${page.slug && doc.layout === 'multi_page' ? `/${page.slug}` : ''}`;
+  const pageUrl = `${base}${page.slug && doc.layout === 'multi_page' ? `/${page.slug}` : ''}` || '/';
 
   return (
     <div className="flex h-screen flex-col bg-slate-100 text-slate-800">
@@ -171,7 +173,7 @@ function Shell({
         <div className="ml-auto flex items-center gap-3">
           <StatusText status={status} dirty={dirty} lastPublished={lastPublished} />
           <a
-            href={`/aitd/beheer/voorbeeld?pagina=${encodeURIComponent(page.slug)}`}
+            href={`${base}/beheer/voorbeeld?pagina=${encodeURIComponent(page.slug)}`}
             target="_blank"
             rel="noopener"
             className="hidden rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 md:inline"
