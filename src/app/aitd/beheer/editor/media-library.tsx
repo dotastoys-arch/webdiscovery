@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useUi } from './ui';
 
 type Item = { id: string; name: string; bytes: number; width: number | null; height: number | null; inUse: boolean };
 
@@ -55,6 +56,7 @@ export function MediaLibrary({ onClose, onPick }: { onClose: () => void; onPick:
   const [busy, setBusy] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [over, setOver] = useState(false);
+  const { confirm } = useUi();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(
@@ -96,7 +98,7 @@ export function MediaLibrary({ onClose, onPick }: { onClose: () => void; onPick:
   }
 
   async function remove(it: Item) {
-    if (!confirm(`"${it.name || 'Deze foto'}" definitief verwijderen?`)) return;
+    if (!(await confirm({ title: 'Foto definitief verwijderen?', message: `“${it.name || 'Deze foto'}” wordt uit de fotobibliotheek gehaald. Dit kan niet ongedaan worden gemaakt.`, confirmLabel: 'Verwijderen', danger: true }))) return;
     const res = await fetch(`/api/aitd/media/${it.id}`, { method: 'DELETE' });
     const j = await res.json().catch(() => ({}));
     if (!res.ok) setError(j.error ?? 'Verwijderen mislukt.');
@@ -170,7 +172,10 @@ export function MediaLibrary({ onClose, onPick }: { onClose: () => void; onPick:
                       <img src={`/api/aitd/media/${it.id}`} alt={it.name} className="aspect-[4/3] w-full object-cover" loading="lazy" />
                     </button>
                     <div className="flex items-center justify-between gap-2 px-2 py-1.5 text-[11px] text-slate-500">
-                      <span className="truncate" title={it.name}>{it.name || 'foto'}</span>
+                      <span className="min-w-0">
+                        <span className="block truncate" title={it.name}>{it.name || 'foto'}</span>
+                        {it.width && it.height && <span className="block text-slate-400">{it.width} × {it.height} px</span>}
+                      </span>
                       {it.inUse ? (
                         <span className="shrink-0 rounded bg-emerald-50 px-1.5 py-0.5 text-emerald-700">in gebruik</span>
                       ) : (

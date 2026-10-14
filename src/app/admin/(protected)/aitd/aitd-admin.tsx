@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { Card, CardHeader } from '../ui';
+import { UiProvider, useUi } from '@/app/aitd/beheer/editor/ui';
 
 type User = {
   id: number;
@@ -30,7 +31,18 @@ async function api(url: string, method = 'GET', body?: unknown) {
   return j;
 }
 
-export function AitdAdmin(props: { locked: boolean; publishedAt: string | null; publishedBy: string | null; updatedBy: string | null }) {
+type AdminProps = { locked: boolean; publishedAt: string | null; publishedBy: string | null; updatedBy: string | null };
+
+export function AitdAdmin(props: AdminProps) {
+  return (
+    <UiProvider>
+      <AdminInner {...props} />
+    </UiProvider>
+  );
+}
+
+function AdminInner(props: AdminProps) {
+  const { confirm } = useUi();
   const [locked, setLocked] = useState(props.locked);
   const [users, setUsers] = useState<User[]>([]);
   const [versions, setVersions] = useState<Version[]>([]);
@@ -195,7 +207,7 @@ export function AitdAdmin(props: { locked: boolean; publishedAt: string | null; 
                               type="button"
                               className={btn}
                               onClick={async () => {
-                                if (!confirm(`Nieuw wachtwoord voor ${u.email}? Het oude werkt dan niet meer.`)) return;
+                                if (!(await confirm({ title: `Nieuw wachtwoord voor ${u.email}?`, message: 'Het oude wachtwoord werkt dan niet meer en de klant wordt overal uitgelogd.', confirmLabel: 'Nieuw wachtwoord maken' }))) return;
                                 try {
                                   const j = await api(`/api/aitd/admin/users/${u.id}`, 'PATCH', { action: 'reset' });
                                   setSecret({ email: u.email, password: j.password });
@@ -230,7 +242,10 @@ export function AitdAdmin(props: { locked: boolean; publishedAt: string | null; 
                             <button
                               type="button"
                               className={`${btn} text-red-600`}
-                              onClick={() => confirm(`Account ${u.email} verwijderen?`) && run(() => api(`/api/aitd/admin/users/${u.id}`, 'DELETE'), 'Account verwijderd.')}
+                              onClick={async () =>
+                                (await confirm({ title: `Account ${u.email} verwijderen?`, confirmLabel: 'Verwijderen', danger: true })) &&
+                                run(() => api(`/api/aitd/admin/users/${u.id}`, 'DELETE'), 'Account verwijderd.')
+                              }
                             >
                               Verwijderen
                             </button>
@@ -306,14 +321,15 @@ function RestoreButtons({
   run: (fn: () => Promise<unknown>, ok: string) => void;
   btn: string;
 }) {
+  const { confirm } = useUi();
   return (
     <div className="flex shrink-0 gap-1.5">
       <button
         type="button"
         className={btn}
         title="Zet deze versie terug in de editor; de live site verandert pas na publiceren"
-        onClick={() =>
-          confirm('Deze versie terugzetten als concept? Niet-gepubliceerde wijzigingen in de editor gaan verloren.') &&
+        onClick={async () =>
+          (await confirm({ title: 'Terugzetten als concept?', message: 'Niet-gepubliceerde wijzigingen in de editor gaan verloren. De live site verandert pas na publiceren.', confirmLabel: 'Terugzetten' })) &&
           run(() => api(`/api/aitd/admin/versions/${id}`, 'POST', { mode: 'draft' }), 'Teruggezet als concept. Open de editor om te controleren en te publiceren.')
         }
       >
@@ -322,8 +338,8 @@ function RestoreButtons({
       <button
         type="button"
         className={`${btn} border-indigo-200 text-indigo-700`}
-        onClick={() =>
-          confirm('Deze versie meteen weer LIVE zetten?') &&
+        onClick={async () =>
+          (await confirm({ title: 'Deze versie meteen live zetten?', message: 'Bezoekers zien direct deze versie.', confirmLabel: 'Live zetten', danger: true })) &&
           run(() => api(`/api/aitd/admin/versions/${id}`, 'POST', { mode: 'publish' }), 'Versie teruggezet en gepubliceerd.')
         }
       >
