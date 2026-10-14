@@ -186,20 +186,38 @@ export function LinkField({
   );
 }
 
+// Aanbevolen formaat voor een fotovak. h = null: hoogte maakt niet uit.
+export type ImageSize = { w: number; h: number | null; note?: string };
+
 export function ImageField({
   label,
   value,
   onChange,
+  size,
 }: {
   label: string;
   value: { id: string; alt: string };
   onChange: (v: { id: string; alt: string }) => void;
+  size?: ImageSize;
 }) {
   const { readOnly } = useEditor();
   const [open, setOpen] = useState(false);
+  // Echte afmetingen van de gekozen foto (uitgelezen zodra het plaatje geladen is).
+  const [actual, setActual] = useState<{ id: string; w: number; h: number } | null>(null);
+  const dims = actual && actual.id === value.id ? actual : null;
+  const tooSmall = !!(dims && size && (dims.w < size.w * 0.75 || (size.h !== null && dims.h < size.h * 0.75)));
   return (
     <div className="space-y-2">
       <span className="block text-xs font-semibold text-slate-600">{label}</span>
+      {size && (
+        <span className="block text-[11px] leading-snug text-slate-500">
+          Aanbevolen formaat:{' '}
+          <strong className="font-semibold text-slate-700">
+            {size.h === null ? `${size.w} px breed` : `${size.w} × ${size.h} px`}
+          </strong>
+          {size.note && <> — {size.note}</>}
+        </span>
+      )}
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -210,7 +228,12 @@ export function ImageField({
         >
           {value.id ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={`/api/aitd/media/${value.id}`} alt="" className="h-full w-full object-cover" />
+            <img
+              src={`/api/aitd/media/${value.id}`}
+              alt=""
+              className="h-full w-full object-cover"
+              onLoad={(e) => setActual({ id: value.id, w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })}
+            />
           ) : (
             <span className="flex h-full items-center justify-center text-[11px] text-slate-400">Geen foto</span>
           )}
@@ -239,6 +262,12 @@ export function ImageField({
           )}
         </div>
       </div>
+      {dims && (
+        <span className={`block text-[11px] leading-snug ${tooSmall ? 'text-amber-700' : 'text-slate-500'}`}>
+          Deze foto: <strong className="font-semibold">{dims.w} × {dims.h} px</strong>
+          {tooSmall && ' — aan de kleine kant, kan wat wazig worden. Kies liefst een grotere foto.'}
+        </span>
+      )}
       {value.id && (
         <input
           className={inputCls}
