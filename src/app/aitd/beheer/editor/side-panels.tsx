@@ -5,6 +5,7 @@ import { BLOCK_TYPES, RESERVED_SLUGS, newId, slugify, type BlockType } from '@/l
 import { BLOCK_LABELS, makeBlock } from '@/lib/aitd/defaults';
 import { useEditor } from './state';
 import { dragState } from './canvas';
+import { useUi } from './ui';
 import { Choice, IconBtn, LinkField, TextArea, TextField, inputCls } from './fields';
 
 // Linkerpaneel: onderdelen (slepen), pagina's en algemene instellingen.
@@ -73,6 +74,7 @@ export function Palette() {
 
 export function PagesPanel() {
   const { doc, update, pageIndex, setPageIndex, readOnly } = useEditor();
+  const { confirm } = useUi();
   const [newTitle, setNewTitle] = useState('');
   const [err, setErr] = useState<string | null>(null);
   const multi = doc.layout === 'multi_page';
@@ -110,10 +112,18 @@ export function PagesPanel() {
           { value: 'one_page', label: 'Eén pagina' },
           { value: 'multi_page', label: 'Meerdere pagina’s' },
         ]}
-        onChange={(v) => {
+        onChange={async (v) => {
           if (v === doc.layout) return;
-          if (v === 'one_page' && doc.pages.length > 1 &&
-            !confirm('Bij “Eén pagina” is alleen de homepage zichtbaar. De andere pagina’s blijven bewaard en komen terug als je weer “Meerdere pagina’s” kiest. Doorgaan?')) return;
+          if (
+            v === 'one_page' &&
+            doc.pages.length > 1 &&
+            !(await confirm({
+              title: 'Overstappen naar één pagina?',
+              message: 'Alleen de homepage is dan zichtbaar. De andere pagina’s blijven bewaard en komen terug als je weer “Meerdere pagina’s” kiest.',
+              confirmLabel: 'Overstappen',
+            }))
+          )
+            return;
           update((d) => {
             d.layout = v;
           });
@@ -167,8 +177,8 @@ export function PagesPanel() {
                       <IconBtn
                         title="Pagina verwijderen"
                         danger
-                        onClick={() => {
-                          if (!confirm(`De pagina “${p.title}” verwijderen?`)) return;
+                        onClick={async () => {
+                          if (!(await confirm({ title: `De pagina “${p.title}” verwijderen?`, message: 'Dit kun je terugdraaien met de pijl “ongedaan maken” linksboven.', confirmLabel: 'Verwijderen', danger: true }))) return;
                           update((d) => {
                             d.pages.splice(i, 1);
                           });

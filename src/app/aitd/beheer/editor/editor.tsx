@@ -8,6 +8,7 @@ import { Canvas } from './canvas';
 import { BlockForm } from './block-form';
 import { Palette, PagesPanel, SettingsPanel } from './side-panels';
 import { PasswordDialog } from './password-dialog';
+import { UiProvider, useUi } from './ui';
 
 type Props = {
   initial: SiteDoc;
@@ -26,9 +27,11 @@ export function Editor(props: Props) {
   const markDirty = useCallback(() => setDirty(true), []);
   const readOnly = props.locked && props.role === 'client';
   return (
-    <EditorProvider initial={props.initial} readOnly={readOnly} onChange={markDirty}>
-      <Shell {...props} dirty={dirty} setDirty={setDirty} readOnly={readOnly} />
-    </EditorProvider>
+    <UiProvider>
+      <EditorProvider initial={props.initial} readOnly={readOnly} onChange={markDirty}>
+        <Shell {...props} dirty={dirty} setDirty={setDirty} readOnly={readOnly} />
+      </EditorProvider>
+    </UiProvider>
   );
 }
 
@@ -43,6 +46,7 @@ function Shell({
   readOnly,
 }: Props & { dirty: boolean; setDirty: (v: boolean) => void; readOnly: boolean }) {
   const { doc, undo, redo, canUndo, canRedo, selected, select, page, pageIndex, setPageIndex } = useEditor();
+  const { confirm } = useUi();
   const [rev, setRev] = useState(initialRev);
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const [tab, setTab] = useState<'blocks' | 'pages' | 'settings'>('blocks');
@@ -68,7 +72,7 @@ function Shell({
   }, [doc, rev, setDirty]);
 
   async function publish() {
-    if (!confirm('De website live zetten? Bezoekers zien direct de nieuwe versie.')) return;
+    if (!(await confirm({ title: 'De website live zetten?', message: 'Bezoekers zien direct de nieuwe versie.', confirmLabel: 'Publiceren' }))) return;
     let currentRev: number | null = rev;
     if (dirty) currentRev = await save();
     if (currentRev === null) return;
@@ -85,7 +89,7 @@ function Shell({
   }
 
   async function logout() {
-    if (dirty && !confirm('Je hebt wijzigingen die nog niet zijn opgeslagen. Toch uitloggen?')) return;
+    if (dirty && !(await confirm({ title: 'Wijzigingen niet opgeslagen', message: 'Je hebt wijzigingen die nog niet zijn opgeslagen. Toch weggaan?', confirmLabel: 'Toch weggaan', danger: true }))) return;
     if (role === 'admin') {
       window.location.href = '/admin/aitd';
       return;
