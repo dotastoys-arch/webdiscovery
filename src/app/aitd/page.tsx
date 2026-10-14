@@ -1,24 +1,34 @@
 import type { Metadata } from 'next';
-import { getPublishedSite } from '@/lib/aitd/db';
-import { aitdBase } from '@/lib/aitd/host';
+import { permanentRedirect } from 'next/navigation';
+import { getPublishedInfo, markDomainLive } from '@/lib/aitd/db';
+import { AITD_ORIGIN, organizationJsonLd, pageMetadata, seoContext } from '@/lib/aitd/seo';
 import { SiteView } from './_site/render';
 
 // Publieke site van klant AITD Consulting BV. De inhoud komt uit de database en
-// wordt beheerd via /aitd/beheer. Wordt later ook via aitdconsulting.eu
-// geserveerd (host-routing in src/proxy.ts).
+// wordt beheerd via /aitd/beheer. Op aitdconsulting.eu draait dezelfde site
+// zonder /aitd (host-routing in src/proxy.ts) en is hij zichtbaar voor zoekmachines.
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const site = await getPublishedSite();
-  return {
-    title: site.settings.seoTitle,
-    description: site.settings.seoDescription,
-    icons: { icon: '/aitd/icon.svg' },
-  };
+  const [{ site }, seo] = await Promise.all([getPublishedInfo(), seoContext()]);
+  return pageMetadata(site, site.pages[0], seo);
 }
 
 export default async function AitdHome() {
-  const site = await getPublishedSite();
-  return <SiteView ctx={{ site, page: site.pages[0], base: await aitdBase() }} />;
+  const [info, seo] = await Promise.all([getPublishedInfo(), seoContext()]);
+  if (seo.live) await markDomainLive();
+  // Eigen domein actief? Dan stuurt het demo-adres door (geen dubbele site in Google).
+  else if (info.domainLiveAt) permanentRedirect(AITD_ORIGIN);
+
+  const { site } = info;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd(site)).replace(/</g, '\\u003c') }}
+      />
+      <SiteView ctx={{ site, page: site.pages[0], base: seo.base }} />
+    </>
+  );
 }

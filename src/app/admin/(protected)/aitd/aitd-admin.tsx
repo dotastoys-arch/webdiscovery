@@ -31,7 +31,13 @@ async function api(url: string, method = 'GET', body?: unknown) {
   return j;
 }
 
-type AdminProps = { locked: boolean; publishedAt: string | null; publishedBy: string | null; updatedBy: string | null };
+type AdminProps = {
+  locked: boolean;
+  publishedAt: string | null;
+  publishedBy: string | null;
+  updatedBy: string | null;
+  domainLiveAt: string | null;
+};
 
 export function AitdAdmin(props: AdminProps) {
   return (
@@ -127,6 +133,17 @@ function AdminInner(props: AdminProps) {
           <div className="mt-2 text-sm text-neutral-600">
             Laatst gepubliceerd: <strong>{fmt(props.publishedAt)}</strong>
             {props.publishedBy && <> door {props.publishedBy}</>}
+          </div>
+          <div className="mt-2 text-sm">
+            {props.domainLiveAt ? (
+              <span className="text-emerald-700">
+                ● Live op <strong>aitdconsulting.eu</strong> sinds {fmt(props.domainLiveAt)} — zichtbaar voor Google en AI.
+              </span>
+            ) : (
+              <span className="text-amber-700">
+                ● Demo — niet zichtbaar in Google. Gaat automatisch aan zodra aitdconsulting.eu gekoppeld is.
+              </span>
+            )}
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             <Link href="/aitd/beheer" className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700">

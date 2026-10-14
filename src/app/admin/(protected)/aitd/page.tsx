@@ -15,7 +15,7 @@ export default async function AitdAdminPage() {
         title="AITD-portaal"
         subtitle="Klantaccounts, versies en controle over de website van AITD Consulting."
       />
-      <AitdAdmin locked={row.clientLocked} publishedAt={row.publishedAt} publishedBy={row.publishedBy} updatedBy={row.updatedBy} />
+      <AitdAdmin locked={row.clientLocked} publishedAt={row.publishedAt} publishedBy={row.publishedBy} updatedBy={row.updatedBy} domainLiveAt={row.domainLiveAt} />
     </div>
   );
 }

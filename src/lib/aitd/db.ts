@@ -22,6 +22,8 @@ export function ensureSchema(): Promise<void> {
         published_at timestamptz,
         published_by text
       )`;
+      // Wanneer het eigen domein voor het eerst bezocht werd (= live voor zoekmachines).
+      await sql`alter table aitd_site add column if not exists domain_live_at timestamptz`;
       await sql`create table if not exists aitd_versions (
         id serial primary key,
         doc jsonb not null,
@@ -84,6 +86,7 @@ export type SiteRow = {
   updatedBy: string | null;
   publishedAt: string | null;
   publishedBy: string | null;
+  domainLiveAt: string | null;
 };
 
 export async function getSiteRow(): Promise<SiteRow> {
@@ -109,19 +112,40 @@ export async function getSiteRow(): Promise<SiteRow> {
     updatedBy: (r.updated_by as string) ?? null,
     publishedAt: r.published_at ? String(r.published_at) : null,
     publishedBy: (r.published_by as string) ?? null,
+    domainLiveAt: r.domain_live_at ? String(r.domain_live_at) : null,
   };
 }
 
 // Gepubliceerde versie voor bezoekers. Valt terug op de standaardinhoud als
 // er (nog) geen database is of er iets misgaat — de site blijft dus altijd online.
 export async function getPublishedSite(): Promise<SiteDoc> {
-  if (!hasDb()) return defaultSite();
+  return (await getPublishedInfo()).site;
+}
+
+export type PublishedInfo = { site: SiteDoc; publishedAt: string | null; domainLiveAt: string | null };
+
+export async function getPublishedInfo(): Promise<PublishedInfo> {
+  if (!hasDb()) return { site: defaultSite(), publishedAt: null, domainLiveAt: null };
   try {
     const row = await getSiteRow();
-    return row.published ?? defaultSite();
+    return { site: row.published ?? defaultSite(), publishedAt: row.publishedAt, domainLiveAt: row.domainLiveAt };
   } catch (e) {
     console.error('[aitd] published laden mislukt', e);
-    return defaultSite();
+    return { site: defaultSite(), publishedAt: null, domainLiveAt: null };
+  }
+}
+
+// Eerste bezoek via het eigen domein: vanaf dan is de site "live" (zoekmachines aan,
+// demo-adres stuurt door). Eenmalig; daarna slaat deze functie het werk over.
+let domainMarked = false;
+export async function markDomainLive(): Promise<void> {
+  if (domainMarked || !hasDb()) return;
+  try {
+    await ensureSchema();
+    await getSql()`update aitd_site set domain_live_at = now() where id = 1 and domain_live_at is null`;
+    domainMarked = true;
+  } catch (e) {
+    console.error('[aitd] domein markeren mislukt', e);
   }
 }
 
