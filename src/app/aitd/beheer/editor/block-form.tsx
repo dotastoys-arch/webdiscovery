@@ -5,7 +5,16 @@ import { ICONS, type IconName } from '@/lib/aitd/types';
 import { BLOCK_LABELS } from '@/lib/aitd/defaults';
 import { Icon } from '../../_site/render';
 import { useBlockUpdater, useEditor } from './state';
-import { Choice, ImageField, LinkField, ListEditor, TextArea, TextField } from './fields';
+import { Choice, ImageField, LinkField, ListEditor, TextArea, TextField, type ImageSize } from './fields';
+
+// Aanbevolen fotoformaten per plek (2× de getoonde grootte, voor scherpe schermen).
+const SIZES: Record<'hero' | 'image' | 'imageFull' | 'imageText' | 'gallery', ImageSize> = {
+  hero: { w: 1200, h: 900, note: 'liggend 4:3, wordt zo nodig bijgesneden' },
+  image: { w: 2000, h: null, note: 'hoogte vrij, liggend werkt het mooist' },
+  imageFull: { w: 2000, h: 1000, note: 'breed liggend (2:1)' },
+  imageText: { w: 1200, h: 900, note: 'liggend 4:3, wordt zo nodig bijgesneden' },
+  gallery: { w: 1000, h: 1000, note: 'vierkant, wordt zo nodig bijgesneden' },
+};
 
 // Rechterpaneel: alle instellingen van het geselecteerde blok.
 
@@ -86,7 +95,9 @@ function Fields({ type, data, set }: { type: BlockType; data: Block['data']; set
             ]}
             onChange={(v) => set('visual', v)}
           />
-          {d.visual === 'image' && <ImageField label="Foto" value={d.image} onChange={(v) => set('image', v)} />}
+          {d.visual === 'image' && (
+            <ImageField label="Foto" size={SIZES.hero} value={d.image} onChange={(v) => set('image', v)} />
+          )}
           <TextField
             label="Balk onderaan"
             value={d.strip}
@@ -193,7 +204,7 @@ function Fields({ type, data, set }: { type: BlockType; data: Block['data']; set
       const d = data as BlockData<'image'>;
       return (
         <>
-          <ImageField label="Foto" value={d.image} onChange={(v) => set('image', v)} />
+          <ImageField label="Foto" size={d.size === 'full' ? SIZES.imageFull : SIZES.image} value={d.image} onChange={(v) => set('image', v)} />
           <TextField label="Onderschrift" value={d.caption} max={300} onChange={(v) => set('caption', v)} />
           <Choice
             label="Breedte"
@@ -211,7 +222,7 @@ function Fields({ type, data, set }: { type: BlockType; data: Block['data']; set
       const d = data as BlockData<'imageText'>;
       return (
         <>
-          <ImageField label="Foto" value={d.image} onChange={(v) => set('image', v)} />
+          <ImageField label="Foto" size={SIZES.imageText} value={d.image} onChange={(v) => set('image', v)} />
           <Choice label="Foto aan de" value={d.side} options={[{ value: 'left', label: 'Linkerkant' }, { value: 'right', label: 'Rechterkant' }]} onChange={(v) => set('side', v)} />
           <TextField label="Klein kopje" value={d.label} max={80} onChange={(v) => set('label', v)} />
           <TextField label="Titel" value={d.title} max={200} onChange={(v) => set('title', v)} />
@@ -235,7 +246,7 @@ function Fields({ type, data, set }: { type: BlockType; data: Block['data']; set
             onChange={(v) => set('images', v)}
             render={(it, setIt) => (
               <>
-                <ImageField label="Foto" value={it.image} onChange={(v) => setIt({ ...it, image: v })} />
+                <ImageField label="Foto" size={SIZES.gallery} value={it.image} onChange={(v) => setIt({ ...it, image: v })} />
                 <TextField label="Onderschrift" value={it.caption} max={200} onChange={(v) => setIt({ ...it, caption: v })} />
               </>
             )}

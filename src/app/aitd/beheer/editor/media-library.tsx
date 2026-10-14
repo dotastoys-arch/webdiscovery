@@ -172,7 +172,10 @@ export function MediaLibrary({ onClose, onPick }: { onClose: () => void; onPick:
                       <img src={`/api/aitd/media/${it.id}`} alt={it.name} className="aspect-[4/3] w-full object-cover" loading="lazy" />
                     </button>
                     <div className="flex items-center justify-between gap-2 px-2 py-1.5 text-[11px] text-slate-500">
-                      <span className="truncate" title={it.name}>{it.name || 'foto'}</span>
+                      <span className="min-w-0">
+                        <span className="block truncate" title={it.name}>{it.name || 'foto'}</span>
+                        {it.width && it.height && <span className="block text-slate-400">{it.width} × {it.height} px</span>}
+                      </span>
                       {it.inUse ? (
                         <span className="shrink-0 rounded bg-emerald-50 px-1.5 py-0.5 text-emerald-700">in gebruik</span>
                       ) : (
