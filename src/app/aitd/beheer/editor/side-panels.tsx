@@ -25,7 +25,7 @@ const PALETTE_ICONS: Record<BlockType, string> = {
 };
 
 export function Palette() {
-  const { update, pageIndex, page, selectedId, select, readOnly } = useEditor();
+  const { doc, update, pageIndex, setPageIndex, page, selectedId, select, readOnly } = useEditor();
 
   function addAtEnd(type: BlockType) {
     const b = makeBlock(type);
@@ -39,6 +39,22 @@ export function Palette() {
 
   return (
     <div className="space-y-2 p-4">
+      {doc.layout === 'multi_page' && (
+        <label className="mb-3 block rounded-md border border-[#4479AB]/40 bg-[#4479AB]/5 p-3">
+          <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-[#4479AB]">Je bouwt aan de pagina</span>
+          <select
+            value={pageIndex}
+            onChange={(e) => setPageIndex(Number(e.target.value))}
+            className={`${inputCls} font-semibold`}
+          >
+            {doc.pages.map((p, i) => (
+              <option key={p.id} value={i}>
+                {p.title}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       <p className="text-xs leading-relaxed text-slate-500">
         <strong className="text-slate-700">Sleep</strong> een onderdeel naar de pagina, of klik erop om het toe te voegen
         {selectedId ? ' onder het geselecteerde onderdeel' : ' onderaan'}.
@@ -72,7 +88,7 @@ export function Palette() {
   );
 }
 
-export function PagesPanel() {
+export function PagesPanel({ onBuild }: { onBuild: () => void }) {
   const { doc, update, pageIndex, setPageIndex, readOnly } = useEditor();
   const { confirm } = useUi();
   const [newTitle, setNewTitle] = useState('');
@@ -92,6 +108,13 @@ export function PagesPanel() {
   function addPage() {
     const title = newTitle.trim();
     if (!title) return setErr('Geef de pagina een naam.');
+    if (doc.pages.some((p) => p.title.trim().toLowerCase() === title.toLowerCase()) || (slugify(title) === 'home' && doc.pages[0])) {
+      return setErr(
+        slugify(title) === 'home'
+          ? 'De eerste pagina is al de homepage. Kies een andere naam, bijv. “About us”.'
+          : 'Er bestaat al een pagina met die naam.'
+      );
+    }
     setErr(null);
     const slug = uniqueSlug(title);
     const hero = makeBlock('text');
@@ -101,6 +124,7 @@ export function PagesPanel() {
     });
     setNewTitle('');
     setPageIndex(doc.pages.length);
+    onBuild(); // meteen door naar de onderdelen om de pagina op te bouwen
   }
 
   return (
@@ -147,8 +171,26 @@ export function PagesPanel() {
               >
                 <div className="flex items-center gap-1 px-2 py-1.5">
                   <button type="button" onClick={() => setPageIndex(i)} className="min-w-0 flex-1 text-left">
-                    <span className="block truncate text-sm font-semibold text-slate-800">{p.title}</span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="truncate text-sm font-semibold text-slate-800">{p.title}</span>
+                      {i === 0 && (
+                        <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-slate-500">
+                          Homepage
+                        </span>
+                      )}
+                    </span>
                     <span className="block truncate text-[11px] text-slate-400">/aitd{p.slug ? `/${p.slug}` : ''}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPageIndex(i);
+                      onBuild();
+                    }}
+                    className="shrink-0 rounded px-2 py-1 text-[11px] font-semibold text-[#4479AB] hover:bg-[#4479AB]/10"
+                    title="Onderdelen op deze pagina zetten"
+                  >
+                    Opbouwen →
                   </button>
                   {!readOnly && i > 0 && (
                     <>
@@ -228,7 +270,10 @@ export function PagesPanel() {
                 placeholder="Bijv. About us"
                 value={newTitle}
                 maxLength={80}
-                onChange={(e) => setNewTitle(e.target.value)}
+                onChange={(e) => {
+                  setNewTitle(e.target.value);
+                  if (err) setErr(null);
+                }}
                 onKeyDown={(e) => e.key === 'Enter' && addPage()}
               />
               {err && <p className="text-xs text-red-600">{err}</p>}
