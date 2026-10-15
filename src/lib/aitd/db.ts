@@ -1,5 +1,5 @@
 import { getSql, hasDb } from '@/lib/db';
-import { defaultSite } from './defaults';
+import { aboutBlock, defaultSite } from './defaults';
 import { parseSite, type SiteDoc } from './types';
 
 // Opslag van de AITD-site in Neon. Tabellen worden bij eerste gebruik
@@ -62,6 +62,10 @@ export function ensureSchema(): Promise<void> {
         uploaded_by text,
         created_at timestamptz not null default now()
       )`;
+      await sql`create table if not exists aitd_content_migrations (
+        id text primary key,
+        applied_at timestamptz not null default now()
+      )`;
       await sql`create table if not exists aitd_audit (
         id serial primary key,
         actor text not null,
@@ -100,6 +104,7 @@ export async function getSiteRow(): Promise<SiteRow> {
               on conflict (id) do nothing`;
     rows = await sql`select * from aitd_site where id = 1`;
   }
+  if (await applyContentMigrations()) rows = await sql`select * from aitd_site where id = 1`;
   const r = rows[0];
   const draft = parseSite(r.draft);
   const published = r.published ? parseSite(r.published) : null;
@@ -114,6 +119,55 @@ export async function getSiteRow(): Promise<SiteRow> {
     publishedBy: (r.published_by as string) ?? null,
     domainLiveAt: r.domain_live_at ? String(r.domain_live_at) : null,
   };
+}
+
+// Eenmalige inhoudsupdates die wij (WebDiscovery) namens de klant doorvoeren.
+// Elke update draait precies één keer (ook bij meerdere servers tegelijk) en
+// komt niet terug als de klant het onderdeel later zelf weghaalt.
+type SiteJson = { pages?: { blocks?: { id?: string; type?: string }[] }[] };
+
+const CONTENT_MIGRATIONS: { id: string; apply: (doc: SiteJson) => boolean }[] = [
+  {
+    // About-onderdeel op de homepage, vóór het contactformulier.
+    id: '2026-10-about',
+    apply: (doc) => {
+      const blocks = doc.pages?.[0]?.blocks;
+      if (!blocks || blocks.some((b) => b.id === 'about')) return false;
+      const at = blocks.findIndex((b) => b.type === 'contact');
+      blocks.splice(at < 0 ? blocks.length : at, 0, aboutBlock());
+      return true;
+    },
+  },
+];
+
+let migrationsChecked = false;
+async function applyContentMigrations(): Promise<boolean> {
+  if (migrationsChecked) return false;
+  const sql = getSql();
+  let changed = false;
+  for (const m of CONTENT_MIGRATIONS) {
+    const claimed = await sql`insert into aitd_content_migrations (id) values (${m.id}) on conflict (id) do nothing returning id`;
+    if (!claimed[0]) continue; // al eerder uitgevoerd
+    const rows = await sql`select draft, published from aitd_site where id = 1`;
+    if (!rows[0]) continue;
+    const draft = rows[0].draft as SiteJson;
+    const published = rows[0].published as SiteJson | null;
+    const dChanged = m.apply(draft);
+    const pChanged = published ? m.apply(published) : false;
+    // Alleen opslaan als het resultaat nog steeds geldig is.
+    if (dChanged && parseSite(draft).ok) {
+      await sql`update aitd_site set draft = ${JSON.stringify(draft)}::jsonb, rev = rev + 1, updated_at = now(), updated_by = 'webdiscovery' where id = 1`;
+      changed = true;
+    }
+    if (pChanged && published && parseSite(published).ok) {
+      await sql`update aitd_site set published = ${JSON.stringify(published)}::jsonb, published_at = now(), published_by = 'webdiscovery' where id = 1`;
+      await sql`insert into aitd_versions (doc, note, created_by) values (${JSON.stringify(published)}::jsonb, ${`Update: ${m.id}`}, 'webdiscovery')`;
+      changed = true;
+    }
+    if (changed) await audit('webdiscovery', 'inhoud bijgewerkt', { update: m.id });
+  }
+  migrationsChecked = true;
+  return changed;
 }
 
 // Gepubliceerde versie voor bezoekers. Valt terug op de standaardinhoud als
