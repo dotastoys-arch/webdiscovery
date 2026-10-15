@@ -118,7 +118,17 @@ export function SiteFooter() {
         <span className={`${heading} text-[11px] font-semibold tracking-[0.3em] uppercase`} style={{ color: ACCENT }}>
           All in the detail
         </span>
-        <span>© {new Date().getFullYear()}</span>
+        <span>
+          © {new Date().getFullYear()} · Website by{' '}
+          <a
+            href="https://webdiscovery.nl/?utm_source=aitd&utm_medium=footer"
+            target="_blank"
+            rel="noopener"
+            className="font-semibold text-slate-600 underline-offset-4 hover:text-[#0B2E52] hover:underline"
+          >
+            WebDiscovery
+          </a>
+        </span>
       </div>
     </footer>
   );
