@@ -88,6 +88,24 @@ export function makeBlock(type: BlockType): Block {
   return { id: newId(), type, nav: '', data: blockTemplate(type) } as Block;
 }
 
+// About-onderdeel (op verzoek van de klant toegevoegd, oktober 2026).
+export function aboutBlock(): Block {
+  return {
+    id: 'about',
+    type: 'text',
+    nav: 'About',
+    data: {
+      label: 'About',
+      title: 'Independent political and security analysis',
+      body:
+        'Independent political and security analyst with over 20 years’ experience delivering intelligence reports, threat assessments, and strategic insights for the United Nations, international tribunals, and other agencies.\n\n' +
+        'I specialise in helping organisations understand complex political and security environments so they can make informed decisions, manage risk, and operate safely.',
+      align: 'left',
+      background: 'light',
+    },
+  };
+}
+
 export function defaultSite(): SiteDoc {
   return {
     layout: 'one_page',
@@ -181,6 +199,7 @@ export function defaultSite(): SiteDoc {
               note: 'Beyond our core regions, we can leverage expertise across other geographical and subject-matter areas.',
             },
           },
+          aboutBlock(),
           {
             id: 'contact',
             type: 'contact',
