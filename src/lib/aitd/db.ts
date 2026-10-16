@@ -138,6 +138,20 @@ const CONTENT_MIGRATIONS: { id: string; apply: (doc: SiteJson) => boolean }[] = 
       return true;
     },
   },
+  {
+    // Op verzoek: de one-page begint met About (direct onder het openingsblok).
+    id: '2026-10-about-first',
+    apply: (doc) => {
+      const blocks = doc.pages?.[0]?.blocks;
+      if (!blocks) return false;
+      const from = blocks.findIndex((b) => b.id === 'about');
+      const to = blocks[0]?.type === 'hero' ? 1 : 0;
+      if (from < 0 || from === to) return false;
+      const [about] = blocks.splice(from, 1);
+      blocks.splice(to, 0, about);
+      return true;
+    },
+  },
 ];
 
 let migrationsChecked = false;
@@ -154,17 +168,21 @@ async function applyContentMigrations(): Promise<boolean> {
     const published = rows[0].published as SiteJson | null;
     const dChanged = m.apply(draft);
     const pChanged = published ? m.apply(published) : false;
+    let thisChanged = false;
     // Alleen opslaan als het resultaat nog steeds geldig is.
     if (dChanged && parseSite(draft).ok) {
       await sql`update aitd_site set draft = ${JSON.stringify(draft)}::jsonb, rev = rev + 1, updated_at = now(), updated_by = 'webdiscovery' where id = 1`;
-      changed = true;
+      thisChanged = true;
     }
     if (pChanged && published && parseSite(published).ok) {
       await sql`update aitd_site set published = ${JSON.stringify(published)}::jsonb, published_at = now(), published_by = 'webdiscovery' where id = 1`;
       await sql`insert into aitd_versions (doc, note, created_by) values (${JSON.stringify(published)}::jsonb, ${`Update: ${m.id}`}, 'webdiscovery')`;
-      changed = true;
+      thisChanged = true;
     }
-    if (changed) await audit('webdiscovery', 'inhoud bijgewerkt', { update: m.id });
+    if (thisChanged) {
+      changed = true;
+      await audit('webdiscovery', 'inhoud bijgewerkt', { update: m.id });
+    }
   }
   migrationsChecked = true;
   return changed;
