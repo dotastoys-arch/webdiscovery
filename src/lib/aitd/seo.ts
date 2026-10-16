@@ -7,7 +7,8 @@ import type { Page, SiteDoc } from './types';
 // - Demo (webdiscovery.nl/aitd): niet indexeren, geen sitemap.
 // - Eigen domein (aitdconsulting.eu): indexeren, canonical, sitemap, structured data.
 
-export const AITD_ORIGIN = `https://${AITD_DOMAINS[0]}`;
+// Hoofdadres = www (zo ingesteld in Vercel; aitdconsulting.eu stuurt door naar www).
+export const AITD_ORIGIN = `https://www.${AITD_DOMAINS[0]}`;
 
 export type Seo = { live: boolean; base: string };
 
