@@ -152,40 +152,85 @@ const CONTENT_MIGRATIONS: { id: string; apply: (doc: SiteJson) => boolean }[] = 
       return true;
     },
   },
+  {
+    // Op verzoek: About toch weer onderaan, direct vóór het contactformulier.
+    id: '2026-10-about-before-contact',
+    apply: (doc) => {
+      const blocks = doc.pages?.[0]?.blocks;
+      if (!blocks) return false;
+      const from = blocks.findIndex((b) => b.id === 'about');
+      if (from < 0) return false;
+      const [about] = blocks.splice(from, 1);
+      const contact = blocks.findIndex((b) => b.type === 'contact');
+      const to = contact < 0 ? blocks.length : contact;
+      blocks.splice(to, 0, about);
+      return to !== from;
+    },
+  },
 ];
 
-let migrationsChecked = false;
-async function applyContentMigrations(): Promise<boolean> {
-  if (migrationsChecked) return false;
+// Alle openstaande updates worden in één keer op het document toegepast en met
+// één voorwaardelijke schrijfactie (rev-check) opgeslagen. Gelijktijdige
+// paginaweergaven (ook op meerdere servers) kunnen elkaar zo niet in de weg zitten:
+// wie te laat is, leest opnieuw en ziet dat er niets meer te doen is.
+let migrationsRun: Promise<boolean> | null = null;
+function applyContentMigrations(): Promise<boolean> {
+  if (!migrationsRun) {
+    migrationsRun = runContentMigrations().catch((e) => {
+      migrationsRun = null; // volgende request opnieuw proberen
+      throw e;
+    });
+  }
+  return migrationsRun;
+}
+
+async function runContentMigrations(): Promise<boolean> {
   const sql = getSql();
-  let changed = false;
-  for (const m of CONTENT_MIGRATIONS) {
-    const claimed = await sql`insert into aitd_content_migrations (id) values (${m.id}) on conflict (id) do nothing returning id`;
-    if (!claimed[0]) continue; // al eerder uitgevoerd
-    const rows = await sql`select draft, published from aitd_site where id = 1`;
-    if (!rows[0]) continue;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const done = new Set((await sql`select id from aitd_content_migrations`).map((r) => r.id as string));
+    const pending = CONTENT_MIGRATIONS.filter((m) => !done.has(m.id));
+    if (!pending.length) return false;
+
+    const rows = await sql`select draft, published, rev from aitd_site where id = 1`;
+    if (!rows[0]) return false;
     const draft = rows[0].draft as SiteJson;
     const published = rows[0].published as SiteJson | null;
-    const dChanged = m.apply(draft);
-    const pChanged = published ? m.apply(published) : false;
-    let thisChanged = false;
+    let dChanged = false;
+    let pChanged = false;
+    for (const m of pending) {
+      if (m.apply(draft)) dChanged = true;
+      if (published && m.apply(published)) pChanged = true;
+    }
     // Alleen opslaan als het resultaat nog steeds geldig is.
-    if (dChanged && parseSite(draft).ok) {
-      await sql`update aitd_site set draft = ${JSON.stringify(draft)}::jsonb, rev = rev + 1, updated_at = now(), updated_by = 'webdiscovery' where id = 1`;
-      thisChanged = true;
+    const writeDraft = dChanged && parseSite(draft).ok;
+    const writePublished = pChanged && !!published && parseSite(published).ok;
+
+    const updated = writeDraft || writePublished
+      ? await sql`
+          update aitd_site set
+            draft = case when ${writeDraft} then ${JSON.stringify(draft)}::jsonb else draft end,
+            published = case when ${writePublished} then ${JSON.stringify(published)}::jsonb else published end,
+            published_at = case when ${writePublished} then now() else published_at end,
+            published_by = case when ${writePublished} then 'webdiscovery' else published_by end,
+            updated_at = now(),
+            updated_by = 'webdiscovery',
+            rev = rev + 1
+          where id = 1 and rev = ${rows[0].rev as number}
+          returning id`
+      : [{ id: 1 }];
+    if (!updated[0]) continue; // tegelijk gewijzigd: opnieuw lezen en proberen
+
+    for (const m of pending) await sql`insert into aitd_content_migrations (id) values (${m.id}) on conflict (id) do nothing`;
+    if (writePublished) {
+      const note = `Update: ${pending.map((m) => m.id).join(', ')}`;
+      await sql`insert into aitd_versions (doc, note, created_by) values (${JSON.stringify(published)}::jsonb, ${note}, 'webdiscovery')`;
     }
-    if (pChanged && published && parseSite(published).ok) {
-      await sql`update aitd_site set published = ${JSON.stringify(published)}::jsonb, published_at = now(), published_by = 'webdiscovery' where id = 1`;
-      await sql`insert into aitd_versions (doc, note, created_by) values (${JSON.stringify(published)}::jsonb, ${`Update: ${m.id}`}, 'webdiscovery')`;
-      thisChanged = true;
+    if (writeDraft || writePublished) {
+      await audit('webdiscovery', 'inhoud bijgewerkt', { updates: pending.map((m) => m.id) });
     }
-    if (thisChanged) {
-      changed = true;
-      await audit('webdiscovery', 'inhoud bijgewerkt', { update: m.id });
-    }
+    return writeDraft || writePublished;
   }
-  migrationsChecked = true;
-  return changed;
+  return false;
 }
 
 // Gepubliceerde versie voor bezoekers. Valt terug op de standaardinhoud als

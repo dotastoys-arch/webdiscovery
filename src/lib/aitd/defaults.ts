@@ -137,7 +137,6 @@ export function defaultSite(): SiteDoc {
               strip: 'Focus: Middle East & North Africa · Horn of Africa',
             },
           },
-          aboutBlock(),
           {
             id: 'services',
             type: 'services',
@@ -200,6 +199,7 @@ export function defaultSite(): SiteDoc {
               note: 'Beyond our core regions, we can leverage expertise across other geographical and subject-matter areas.',
             },
           },
+          aboutBlock(),
           {
             id: 'contact',
             type: 'contact',
