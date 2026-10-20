@@ -124,7 +124,8 @@ export async function getSiteRow(): Promise<SiteRow> {
 // Eenmalige inhoudsupdates die wij (WebDiscovery) namens de klant doorvoeren.
 // Elke update draait precies één keer (ook bij meerdere servers tegelijk) en
 // komt niet terug als de klant het onderdeel later zelf weghaalt.
-type SiteJson = { pages?: { blocks?: { id?: string; type?: string }[] }[] };
+type BlockJson = { id?: string; type?: string; nav?: string; data?: Record<string, unknown> };
+type SiteJson = { layout?: string; pages?: { slug?: string; title?: string; blocks?: BlockJson[] }[] };
 
 const CONTENT_MIGRATIONS: { id: string; apply: (doc: SiteJson) => boolean }[] = [
   {
@@ -165,6 +166,35 @@ const CONTENT_MIGRATIONS: { id: string; apply: (doc: SiteJson) => boolean }[] = 
       const to = contact < 0 ? blocks.length : contact;
       blocks.splice(to, 0, about);
       return to !== from;
+    },
+  },
+  {
+    // Herstel: in het beheer was per ongeluk "Meerdere pagina's" gekozen met een losse
+    // "About us"-pagina, waardoor het one-page-menu verdween. Terug naar één pagina;
+    // de aangepaste About-tekst van die losse pagina gaat naar het About-onderdeel.
+    // De losse pagina blijft bewaard (alleen zichtbaar bij "Meerdere pagina's").
+    id: '2026-10-restore-one-page',
+    apply: (doc) => {
+      let changed = false;
+      if (doc.layout === 'multi_page') {
+        doc.layout = 'one_page';
+        changed = true;
+      }
+      const home = doc.pages?.[0]?.blocks;
+      const about = home?.find((b) => b.id === 'about');
+      const extra = doc.pages
+        ?.slice(1)
+        .flatMap((p) => p.blocks ?? [])
+        .find((b) => b.type === 'text' && typeof b.data?.body === 'string' && (b.data.body as string).includes('political and security analyst'));
+      if (about?.data && extra?.data && about.data.body !== extra.data.body) {
+        about.data.body = extra.data.body;
+        changed = true;
+      }
+      if (about && !about.nav) {
+        about.nav = 'About';
+        changed = true;
+      }
+      return changed;
     },
   },
 ];
